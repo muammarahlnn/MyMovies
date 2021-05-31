@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
@@ -29,13 +30,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnItemClick {
-    // classes
-    private AiringTodayAdapter airingTodayAdapter;
 
     // widgets
-    private RecyclerView rvTvShows;
+    private ProgressBar pbTvShows;
 
-    // attributes
+    // recyclerview attr
+    private RecyclerView rvTvShows;
+    private AiringTodayAdapter airingTodayAdapter;
     private List<AiringToday> airingTodayList;
 
     public static TvShowFragment newInstance() {
@@ -54,9 +55,10 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
         View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
 
         // initialize widgets
-        rvTvShows = view.findViewById(R.id.rv_tv_shows);
+        pbTvShows = view.findViewById(R.id.pb_tv_shows);
 
-        // set recyclerview layout
+        // set recyclerview
+        rvTvShows = view.findViewById(R.id.rv_tv_shows);
         rvTvShows.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         loadData();
@@ -71,14 +73,20 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
         airingTodayResponseCall.enqueue(new Callback<AiringTodayResponse>() {
             @Override
             public void onResponse(Call<AiringTodayResponse> call, Response<AiringTodayResponse> response) {
-                // set the airing today's data to list and put it to recyclerview
                 if (response.isSuccessful() && response.body().getAiringTodayList() != null) {
+                    // put NowPlaying's data to list
                     airingTodayList = response.body().getAiringTodayList();
+
+                    // set recyclerview adapter
                     airingTodayAdapter = new AiringTodayAdapter(airingTodayList, TvShowFragment.this);
                     rvTvShows.setAdapter(airingTodayAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }
+
+                // remove progress bar
+                pbTvShows.setVisibility(View.GONE);
+
             }
 
             @Override

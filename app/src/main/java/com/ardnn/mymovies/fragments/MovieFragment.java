@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
@@ -29,13 +30,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemClick {
-    // classes
-    private NowPlayingAdapter nowPlayingAdapter;
 
     // widgets
-    private RecyclerView rvMovies;
+    ProgressBar pbMovies;
 
-    // attributes
+    // recyclerview attr
+    private RecyclerView rvMovies;
+    private NowPlayingAdapter nowPlayingAdapter;
     private List<NowPlaying> nowPlayings;
 
     public static MovieFragment newInstance() {
@@ -54,9 +55,10 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
         View view =  inflater.inflate(R.layout.fragment_movie, container, false);
 
         // initialize widgets
-        rvMovies = view.findViewById(R.id.rv_movies);
+        pbMovies = view.findViewById(R.id.pb_movies);
 
-        // set recyclerview layout
+        // set recyclerview
+        rvMovies = view.findViewById(R.id.rv_movies);
         rvMovies.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         loadData();
@@ -72,13 +74,18 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
             @Override
             public void onResponse(Call<NowPlayingResponse> call, Response<NowPlayingResponse> response) {
                 if (response.isSuccessful() && response.body().getNowPlayings() != null) {
-                    // set the now playing's data to list and put it to recyclerview
+                    // put NowPlaying's data to list
                     nowPlayings = response.body().getNowPlayings();
+
+                    // set recycerview adapter
                     nowPlayingAdapter = new NowPlayingAdapter(nowPlayings, MovieFragment.this);
                     rvMovies.setAdapter(nowPlayingAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }
+
+                // remove progress bar
+                pbMovies.setVisibility(View.GONE);
             }
 
             @Override

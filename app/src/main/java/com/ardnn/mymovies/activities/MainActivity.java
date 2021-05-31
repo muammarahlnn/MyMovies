@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.fragments.MovieFragment;
+import com.ardnn.mymovies.fragments.MoviesFragment;
 import com.ardnn.mymovies.fragments.ProfileFragment;
-import com.ardnn.mymovies.fragments.TvShowFragment;
+import com.ardnn.mymovies.fragments.TvShowsFragment;
 import com.ardnn.mymovies.utils.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -42,15 +42,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onStart();
 
         // put all fragments to map
-        fragmentMap.put(R.id.menu_item_movie, MovieFragment.newInstance());
-        fragmentMap.put(R.id.menu_item_tv_show, TvShowFragment.newInstance());
+        fragmentMap.put(R.id.menu_item_movie, MoviesFragment.newInstance());
+        fragmentMap.put(R.id.menu_item_tv_show, TvShowsFragment.newInstance());
         fragmentMap.put(R.id.menu_item_profile, ProfileFragment.newInstance());
 
         bnvMain.setOnNavigationItemSelectedListener(this);
         bnvMain.setSelectedItemId(R.id.menu_item_movie);
 
         // change action bar's title color
-        Util.changeActionBarTitle(this, MovieFragment.newInstance().getArguments().getString(EXTRA_STRING));
+        Util.changeActionBarTitle(this, MoviesFragment.newInstance().getArguments().getString(EXTRA_STRING));
     }
 
     @Override

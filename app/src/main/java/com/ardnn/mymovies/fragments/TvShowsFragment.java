@@ -17,8 +17,8 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.adapters.AiringTodayAdapter;
-import com.ardnn.mymovies.models.AiringToday;
-import com.ardnn.mymovies.models.AiringTodayResponse;
+import com.ardnn.mymovies.models.TvShow;
+import com.ardnn.mymovies.models.TvShowResponse;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.networks.TvShowApiClient;
 import com.ardnn.mymovies.networks.TvShowApiInterface;
@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnItemClick {
+public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnItemClick {
 
     // widgets
     private ProgressBar pbTvShows;
@@ -37,10 +37,10 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
     // recyclerview attr
     private RecyclerView rvTvShows;
     private AiringTodayAdapter airingTodayAdapter;
-    private List<AiringToday> airingTodayList;
+    private List<TvShow> tvShowList;
 
-    public static TvShowFragment newInstance() {
-        TvShowFragment fragment = new TvShowFragment();
+    public static TvShowsFragment newInstance() {
+        TvShowsFragment fragment = new TvShowsFragment();
         Bundle args = new Bundle();
         args.putString(MainActivity.EXTRA_STRING, "TV Shows");
         fragment.setArguments(args);
@@ -52,7 +52,7 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_tv_show, container, false);
+        View view = inflater.inflate(R.layout.fragment_tv_shows, container, false);
 
         // initialize widgets
         pbTvShows = view.findViewById(R.id.pb_tv_shows);
@@ -69,16 +69,16 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
         TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
                 .create(TvShowApiInterface.class);
 
-        Call<AiringTodayResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY);
-        airingTodayResponseCall.enqueue(new Callback<AiringTodayResponse>() {
+        Call<TvShowResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY);
+        airingTodayResponseCall.enqueue(new Callback<TvShowResponse>() {
             @Override
-            public void onResponse(Call<AiringTodayResponse> call, Response<AiringTodayResponse> response) {
+            public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
                 if (response.isSuccessful() && response.body().getAiringTodayList() != null) {
                     // put NowPlaying's data to list
-                    airingTodayList = response.body().getAiringTodayList();
+                    tvShowList = response.body().getAiringTodayList();
 
                     // set recyclerview adapter
-                    airingTodayAdapter = new AiringTodayAdapter(airingTodayList, TvShowFragment.this);
+                    airingTodayAdapter = new AiringTodayAdapter(tvShowList, TvShowsFragment.this);
                     rvTvShows.setAdapter(airingTodayAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
@@ -90,7 +90,7 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
             }
 
             @Override
-            public void onFailure(Call<AiringTodayResponse> call, Throwable t) {
+            public void onFailure(Call<TvShowResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -101,7 +101,7 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
         Intent goToDetail = new Intent(getActivity(), DetailActivity.class);
 
         // put airing today's objects to intent
-        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, airingTodayList.get(position));
+        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, tvShowList.get(position));
         startActivity(goToDetail);
     }
 }

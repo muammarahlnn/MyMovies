@@ -10,18 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.models.NowPlaying;
+import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.networks.Const;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> {
-    private List<NowPlaying> nowPlayings;
+    private List<Movie> movieList;
     private OnItemClick onItemClick;
 
-    public NowPlayingAdapter(List<NowPlaying> nowPlayings, OnItemClick onItemClick) {
-        this.nowPlayings = nowPlayings;
+    public NowPlayingAdapter(List<Movie> movieList, OnItemClick onItemClick) {
+        this.movieList = movieList;
         this.onItemClick = onItemClick;
     }
 
@@ -29,7 +29,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_rv_movie, parent, false);
+                .inflate(R.layout.item_rv_films, parent, false);
 
         return new ViewHolder(view, onItemClick);
     }
@@ -37,17 +37,17 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
-                .load(Const.IMG_URL_200 + nowPlayings.get(position).getImageUrl())
+                .load(Const.IMG_URL_200 + movieList.get(position).getImageUrl())
                 .into(holder.ivPoster);
 
-        holder.tvTitle.setText(nowPlayings.get(position).getName());
-        holder.tvVote.setText(String.valueOf(nowPlayings.get(position).getVote()));
-        holder.tvYearReleased.setText(nowPlayings.get(position).getReleaseDate().substring(0, 4));
+        holder.tvTitle.setText(movieList.get(position).getName());
+        holder.tvVote.setText(String.valueOf(movieList.get(position).getVote()));
+        holder.tvYearReleased.setText(movieList.get(position).getReleaseDate().substring(0, 4));
     }
 
     @Override
     public int getItemCount() {
-        return nowPlayings.size();
+        return movieList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

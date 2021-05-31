@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class AiringTodayResponse {
+public class MovieResponse {
     @SerializedName("results")
     @Expose
-    private List<AiringToday> airingTodayList;
+    private List<Movie> movieList;
 
-    public List<AiringToday> getAiringTodayList() {
-        return airingTodayList;
+    public List<Movie> getNowPlayings() {
+        return movieList;
     }
 }

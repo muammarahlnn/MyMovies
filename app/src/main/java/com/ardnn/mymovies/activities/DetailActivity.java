@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.models.Movie;
+import com.ardnn.mymovies.models.Film;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
@@ -42,12 +42,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setMovieData() {
         // get data from previous intent
-        Movie movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
-        String title = movie.getName();
-        String synopsis = movie.getSynopsis();
-        String imageUrl = movie.getImageUrl();
-        String releaseDate = Util.convertToDate(movie.getReleaseDate());
-        double vote = movie.getVote();
+        Film film = getIntent().getParcelableExtra(EXTRA_MOVIE);
+        String title = film.getName();
+        String synopsis = film.getSynopsis();
+        String imageUrl = film.getImageUrl();
+        String releaseDate = Util.convertToDate(film.getReleaseDate());
+        double vote = film.getVote();
 
         // set to widgets
         tvTitle.setText(title);

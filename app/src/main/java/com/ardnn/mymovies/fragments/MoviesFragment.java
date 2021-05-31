@@ -17,8 +17,8 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.adapters.NowPlayingAdapter;
-import com.ardnn.mymovies.models.NowPlaying;
-import com.ardnn.mymovies.models.NowPlayingResponse;
+import com.ardnn.mymovies.models.Movie;
+import com.ardnn.mymovies.models.MovieResponse;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.networks.MovieApiClient;
 import com.ardnn.mymovies.networks.MovieApiInterface;
@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemClick {
+public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItemClick {
 
     // widgets
     ProgressBar pbMovies;
@@ -37,10 +37,10 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
     // recyclerview attr
     private RecyclerView rvMovies;
     private NowPlayingAdapter nowPlayingAdapter;
-    private List<NowPlaying> nowPlayings;
+    private List<Movie> movieList;
 
-    public static MovieFragment newInstance() {
-        MovieFragment fragment = new MovieFragment();
+    public static MoviesFragment newInstance() {
+        MoviesFragment fragment = new MoviesFragment();
         Bundle args = new Bundle();
         args.putString(MainActivity.EXTRA_STRING, "Movies");
         fragment.setArguments(args);
@@ -52,7 +52,7 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_movie, container, false);
+        View view =  inflater.inflate(R.layout.fragment_movies, container, false);
 
         // initialize widgets
         pbMovies = view.findViewById(R.id.pb_movies);
@@ -69,16 +69,16 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
         MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
 
-        Call<NowPlayingResponse> nowPlayingResponseCall = movieApiInterface.getNowPlaying(Const.API_KEY);
-        nowPlayingResponseCall.enqueue(new Callback<NowPlayingResponse>() {
+        Call<MovieResponse> nowPlayingResponseCall = movieApiInterface.getNowPlaying(Const.API_KEY);
+        nowPlayingResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
-            public void onResponse(Call<NowPlayingResponse> call, Response<NowPlayingResponse> response) {
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.isSuccessful() && response.body().getNowPlayings() != null) {
                     // put NowPlaying's data to list
-                    nowPlayings = response.body().getNowPlayings();
+                    movieList = response.body().getNowPlayings();
 
                     // set recycerview adapter
-                    nowPlayingAdapter = new NowPlayingAdapter(nowPlayings, MovieFragment.this);
+                    nowPlayingAdapter = new NowPlayingAdapter(movieList, MoviesFragment.this);
                     rvMovies.setAdapter(nowPlayingAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
@@ -89,7 +89,7 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
             }
 
             @Override
-            public void onFailure(Call<NowPlayingResponse> call, Throwable t) {
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Response Failed.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -100,7 +100,7 @@ public class MovieFragment extends Fragment implements NowPlayingAdapter.OnItemC
         Intent goToDetail = new Intent(getActivity(), DetailActivity.class);
 
         // put now playing' object to intent
-        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, nowPlayings.get(position));
+        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, movieList.get(position));
         startActivity(goToDetail);
     }
 }

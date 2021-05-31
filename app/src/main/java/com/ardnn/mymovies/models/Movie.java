@@ -1,45 +1,72 @@
 package com.ardnn.mymovies.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public abstract class Movie {
-    @SerializedName("poster_path")
-    protected String imageUrl;
+public class Movie extends Film implements Parcelable {
+    @SerializedName("title")
+    private String title;
 
-    @SerializedName("overview")
-    protected String synopsis;
+    @SerializedName("release_date")
+    private String releaseDate;
 
-    @SerializedName("vote_average")
-    protected double vote;
+    // parcelable methods ---------------------------------------------
 
-    // getter and setter ------------------------------------
-    public abstract String getName();
-    public abstract void setName(String name);
-
-    public abstract String getReleaseDate();
-    public abstract void setReleaseDate(String date);
-
-    public String getImageUrl() {
-        return imageUrl;
+    protected Movie(Parcel in) {
+        title = in.readString();
+        releaseDate = in.readString();
+        synopsis = in.readString();
+        imageUrl = in.readString();
+        vote = in.readDouble();
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getSynopsis() {
-        return synopsis;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(releaseDate);
+        dest.writeString(synopsis);
+        dest.writeString(imageUrl);
+        dest.writeDouble(vote);
     }
 
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
+    // getter and setter ----------------------------------------
+    @Override
+    public String getName() {
+        return title;
     }
 
-    public double getVote() {
-        return vote;
+    @Override
+    public void setName(String name) {
+        this.title = name;
     }
 
-    public void setVote(double vote) {
-        this.vote = vote;
+    @Override
+    public String getReleaseDate() {
+        return releaseDate;
     }
+
+    @Override
+    public void setReleaseDate(String date) {
+        releaseDate = date;
+    }
+
 }

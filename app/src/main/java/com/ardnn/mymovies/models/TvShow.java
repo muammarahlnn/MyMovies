@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AiringToday extends Movie implements Parcelable {
+public class TvShow extends Film implements Parcelable {
     @SerializedName("name")
     private String name;
 
@@ -13,7 +13,7 @@ public class AiringToday extends Movie implements Parcelable {
     private String firstAiring;
 
     // parcelable methods ---------------------------------------------------
-    protected AiringToday(Parcel in) {
+    protected TvShow(Parcel in) {
         name = in.readString();
         imageUrl = in.readString();
         synopsis = in.readString();
@@ -21,15 +21,15 @@ public class AiringToday extends Movie implements Parcelable {
         vote = in.readDouble();
     }
 
-    public static final Creator<AiringToday> CREATOR = new Creator<AiringToday>() {
+    public static final Creator<TvShow> CREATOR = new Creator<TvShow>() {
         @Override
-        public AiringToday createFromParcel(Parcel in) {
-            return new AiringToday(in);
+        public TvShow createFromParcel(Parcel in) {
+            return new TvShow(in);
         }
 
         @Override
-        public AiringToday[] newArray(int size) {
-            return new AiringToday[size];
+        public TvShow[] newArray(int size) {
+            return new TvShow[size];
         }
     };
 

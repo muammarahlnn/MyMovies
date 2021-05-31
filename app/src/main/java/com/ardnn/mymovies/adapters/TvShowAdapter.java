@@ -16,11 +16,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.ViewHolder> {
+public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.ViewHolder> {
     private List<TvShow> tvShowList;
     private OnItemClick onItemClick;
 
-    public AiringTodayAdapter(List<TvShow> tvShowList, OnItemClick onItemClick) {
+    public TvShowAdapter(List<TvShow> tvShowList, OnItemClick onItemClick) {
         this.tvShowList = tvShowList;
         this.onItemClick = onItemClick;
     }
@@ -35,9 +35,9 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AiringTodayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TvShowAdapter.ViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
-                .load(Const.IMG_URL_200 + tvShowList.get(position).getImageUrl())
+                .load(Const.IMG_URL_300 + tvShowList.get(position).getImageUrl())
                 .into(holder.ivPoster);
 
         holder.tvTitle.setText(tvShowList.get(position).getName());
@@ -69,11 +69,11 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
 
         @Override
         public void onClick(View v) {
-            onItemClick.onclick(getAdapterPosition());
+            onItemClick.onClick(getAbsoluteAdapterPosition());
         }
     }
 
     public interface OnItemClick {
-        void onclick(int position);
+        void onClick(int position);
     }
 }

@@ -16,11 +16,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     private List<Movie> movieList;
     private OnItemClick onItemClick;
 
-    public NowPlayingAdapter(List<Movie> movieList, OnItemClick onItemClick) {
+    public MovieAdapter(List<Movie> movieList, OnItemClick onItemClick) {
         this.movieList = movieList;
         this.onItemClick = onItemClick;
     }
@@ -37,7 +37,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
-                .load(Const.IMG_URL_200 + movieList.get(position).getImageUrl())
+                .load(Const.IMG_URL_300 + movieList.get(position).getImageUrl())
                 .into(holder.ivPoster);
 
         holder.tvTitle.setText(movieList.get(position).getName());
@@ -70,7 +70,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            onItemClick.onClick(getAdapterPosition());
+            onItemClick.onClick(getAbsoluteAdapterPosition());
         }
     }
 

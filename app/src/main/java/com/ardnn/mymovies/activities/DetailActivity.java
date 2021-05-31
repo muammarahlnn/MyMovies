@@ -13,12 +13,8 @@ import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
 
 public class DetailActivity extends AppCompatActivity {
+
     // extras
-    public static final String EXTRA_TITLE = "extra_title";
-    public static final String EXTRA_SYNOPSIS = "extra_synopsis";
-    public static final String EXTRA_IMAGE_URL = "extra_image_url";
-    public static final String EXTRA_RELEASE_DATE = "extra_release_date";
-    public static final String EXTRA_VOTE = "extra_vote";
     public static final String EXTRA_MOVIE = "extra_movie";
 
     // widgets
@@ -29,6 +25,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         // initialize widgets
         ivPoster = findViewById(R.id.iv_poster_detail);
         tvTitle = findViewById(R.id.tv_title_detail);

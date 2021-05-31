@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
-import com.ardnn.mymovies.adapters.NowPlayingAdapter;
+import com.ardnn.mymovies.adapters.MovieAdapter;
 import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.models.MovieResponse;
 import com.ardnn.mymovies.networks.Const;
@@ -29,14 +29,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItemClick {
+public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick {
 
     // widgets
     ProgressBar pbMovies;
 
     // recyclerview attr
     private RecyclerView rvMovies;
-    private NowPlayingAdapter nowPlayingAdapter;
+    private MovieAdapter movieAdapter;
     private List<Movie> movieList;
 
     public static MoviesFragment newInstance() {
@@ -78,8 +78,8 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
                     movieList = response.body().getNowPlayings();
 
                     // set recycerview adapter
-                    nowPlayingAdapter = new NowPlayingAdapter(movieList, MoviesFragment.this);
-                    rvMovies.setAdapter(nowPlayingAdapter);
+                    movieAdapter = new MovieAdapter(movieList, MoviesFragment.this);
+                    rvMovies.setAdapter(movieAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }

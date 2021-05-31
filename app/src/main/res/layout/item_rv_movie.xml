@@ -5,15 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_card_view"
-    android:layout_margin="5dp">
+    android:layout_margin="12dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="100dp"
-        android:layout_height="160dp"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
 
-        app:cardCornerRadius="7dp"
+        app:cardCornerRadius="10dp"
         android:foreground="@drawable/bg_card_view"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +27,7 @@
             <ImageView
                 android:id="@+id/iv_poster_item_movie"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="170dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,34 +40,35 @@
                 android:background="@drawable/bg_vote_gray"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="5dp"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginEnd="2dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_star" />
 
                 <TextView
                     android:id="@+id/tv_vote_item_movie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8.7"
+                    tools:text="8.7"
                     android:textColor="@color/yellow_primary"
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:background="@color/black_primary"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="6dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,25 +76,26 @@
 
                 <TextView
                     android:id="@+id/tv_title_item_movie"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:lines="1"
-                    android:maxLength="15"
-                    android:textSize="11sp"
+                    android:textSize="15sp"
+                    android:ellipsize="end"
                     android:textColor="@color/yellow_primary"
                     android:fontFamily="@font/poppins_medium"
                     tools:text="Title" />
 
                 <TextView
                     android:id="@+id/tv_year_released_item_movie"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:lines="1"
-                    android:textSize="11sp"
-                    android:textColor="@color/gray"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_primary"
                     android:fontFamily="@font/poppins_regular"
                     tools:text="2021"/>
-
 
             </LinearLayout>
 

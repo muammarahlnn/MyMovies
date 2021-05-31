@@ -57,7 +57,7 @@ public class TvShowFragment extends Fragment implements AiringTodayAdapter.OnIte
         rvTvShows = view.findViewById(R.id.rv_tv_shows);
 
         // set recyclerview layout
-        rvTvShows.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        rvTvShows.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         loadData();
         return view;

@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:fontFamily="@font/poppins_regular"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_primary"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_poster_detail"
             app:layout_constraintEnd_toEndOf="parent"

@@ -4,7 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public abstract class Film {
     @SerializedName("poster_path")
-    protected String imageUrl;
+    protected String posterUrl;
+
+    @SerializedName("backdrop_path")
+    protected String wallpaperUrl;
 
     @SerializedName("overview")
     protected String synopsis;
@@ -19,12 +22,20 @@ public abstract class Film {
     public abstract String getReleaseDate();
     public abstract void setReleaseDate(String date);
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getPosterUrl() {
+        return posterUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+
+    public String getWallpaperUrl() {
+        return wallpaperUrl;
+    }
+
+    public void setWallpaperUrl(String wallpaperUrl) {
+        this.wallpaperUrl = wallpaperUrl;
     }
 
     public String getSynopsis() {

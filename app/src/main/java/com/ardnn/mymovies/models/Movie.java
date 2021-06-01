@@ -18,7 +18,8 @@ public class Movie extends Film implements Parcelable {
         title = in.readString();
         releaseDate = in.readString();
         synopsis = in.readString();
-        imageUrl = in.readString();
+        posterUrl = in.readString();
+        wallpaperUrl = in.readString();
         vote = in.readDouble();
     }
 
@@ -44,7 +45,8 @@ public class Movie extends Film implements Parcelable {
         dest.writeString(title);
         dest.writeString(releaseDate);
         dest.writeString(synopsis);
-        dest.writeString(imageUrl);
+        dest.writeString(posterUrl);
+        dest.writeString(wallpaperUrl);
         dest.writeDouble(vote);
     }
 

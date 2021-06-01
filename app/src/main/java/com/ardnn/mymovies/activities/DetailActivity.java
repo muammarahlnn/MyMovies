@@ -42,7 +42,7 @@ public class DetailActivity extends AppCompatActivity {
         Film film = getIntent().getParcelableExtra(EXTRA_MOVIE);
         String title = film.getName();
         String synopsis = film.getSynopsis();
-        String imageUrl = film.getImageUrl();
+        String wallpaperUrl = film.getWallpaperUrl();
         String releaseDate = Util.convertToDate(film.getReleaseDate());
         double vote = film.getVote();
 
@@ -52,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(releaseDate);
         tvVote.setText(String.valueOf(vote));
         Glide.with(this)
-                .load(Const.IMG_URL_500 + imageUrl)
+                .load(Const.IMG_URL_500 + wallpaperUrl)
                 .into(ivPoster);
 
         // change title action bar

@@ -15,9 +15,10 @@ public class TvShow extends Film implements Parcelable {
     // parcelable methods ---------------------------------------------------
     protected TvShow(Parcel in) {
         name = in.readString();
-        imageUrl = in.readString();
-        synopsis = in.readString();
         firstAiring = in.readString();
+        synopsis = in.readString();
+        posterUrl = in.readString();
+        wallpaperUrl = in.readString();
         vote = in.readDouble();
     }
 
@@ -41,7 +42,8 @@ public class TvShow extends Film implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeString(imageUrl);
+        dest.writeString(posterUrl);
+        dest.writeString(wallpaperUrl);
         dest.writeString(synopsis);
         dest.writeString(firstAiring);
         dest.writeDouble(vote);

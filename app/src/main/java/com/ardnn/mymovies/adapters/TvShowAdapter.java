@@ -37,7 +37,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull TvShowAdapter.ViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
-                .load(Const.IMG_URL_300 + tvShowList.get(position).getImageUrl())
+                .load(Const.IMG_URL_300 + tvShowList.get(position).getPosterUrl())
                 .into(holder.ivPoster);
 
         holder.tvTitle.setText(tvShowList.get(position).getName());

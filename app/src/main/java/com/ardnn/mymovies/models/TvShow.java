@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class TvShow extends Film implements Parcelable {
     @SerializedName("name")
     private String name;
@@ -20,6 +22,8 @@ public class TvShow extends Film implements Parcelable {
         posterUrl = in.readString();
         wallpaperUrl = in.readString();
         vote = in.readDouble();
+        genreIdList = new ArrayList<>();
+        in.readList(genreIdList, Integer.class.getClassLoader());
     }
 
     public static final Creator<TvShow> CREATOR = new Creator<TvShow>() {
@@ -42,11 +46,12 @@ public class TvShow extends Film implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
+        dest.writeString(firstAiring);
+        dest.writeString(synopsis);
         dest.writeString(posterUrl);
         dest.writeString(wallpaperUrl);
-        dest.writeString(synopsis);
-        dest.writeString(firstAiring);
         dest.writeDouble(vote);
+        dest.writeList(genreIdList);
     }
 
     // getter and setter -------------------------------

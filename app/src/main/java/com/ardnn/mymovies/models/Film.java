@@ -2,6 +2,8 @@ package com.ardnn.mymovies.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public abstract class Film {
     @SerializedName("poster_path")
     protected String posterUrl;
@@ -14,6 +16,9 @@ public abstract class Film {
 
     @SerializedName("vote_average")
     protected double vote;
+
+    @SerializedName("genre_ids")
+    protected List<Integer> genreIdList;
 
     // getter and setter ------------------------------------
     public abstract String getName();
@@ -52,5 +57,13 @@ public abstract class Film {
 
     public void setVote(double vote) {
         this.vote = vote;
+    }
+
+    public List<Integer> getGenreIdList() {
+        return genreIdList;
+    }
+
+    public void setGenreIdList(List<Integer> genreIdList) {
+        this.genreIdList = genreIdList;
     }
 }

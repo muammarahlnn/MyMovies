@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,17 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.adapters.MovieAdapter;
+import com.ardnn.mymovies.models.Genre;
+import com.ardnn.mymovies.models.GenreResponse;
 import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.models.MovieResponse;
 import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.networks.GenreApiClient;
+import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.MovieApiClient;
 import com.ardnn.mymovies.networks.MovieApiInterface;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,7 +38,7 @@ import retrofit2.Response;
 public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick {
 
     // widgets
-    ProgressBar pbMovies;
+    private ProgressBar pbMovies;
 
     // recyclerview attr
     private RecyclerView rvMovies;
@@ -62,10 +68,13 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick
         rvMovies.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         loadData();
+
+
         return view;
     }
 
     private void loadData() {
+        // load movies data
         MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
 
@@ -77,7 +86,7 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick
                     // put NowPlaying's data to list
                     movieList = response.body().getNowPlayings();
 
-                    // set recycerview adapter
+                    // set recyclerview adapter
                     movieAdapter = new MovieAdapter(movieList, MoviesFragment.this);
                     rvMovies.setAdapter(movieAdapter);
                 } else {
@@ -93,6 +102,39 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick
                 Toast.makeText(getActivity(), "Response Failed.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // load genre movies data
+        if (Genre.genreMovieMap == null) {
+            GenreApiInterface genreApiInterface = GenreApiClient.getRetrofit()
+                    .create(GenreApiInterface.class);
+
+            Call<GenreResponse> genreResponseCall = genreApiInterface.getGenreMovie(Const.API_KEY);
+            genreResponseCall.enqueue(new Callback<GenreResponse>() {
+                @Override
+                public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
+                    if (response.isSuccessful() && response.body().getGenreList() != null) {
+                        // put genre movies to list
+                        List<Genre> genreMovieList = response.body().getGenreList();
+
+                        //  initialize genreMovieMap and add key-value pair to it with genreMovieList data
+                        Genre.genreMovieMap = new HashMap<>();
+                        for (Genre genre : genreMovieList) {
+                            Genre.genreMovieMap.put(genre.getId(), genre.getName());
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<GenreResponse> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
     }
 
     @Override
@@ -100,7 +142,7 @@ public class MoviesFragment extends Fragment implements MovieAdapter.OnItemClick
         Intent goToDetail = new Intent(getActivity(), DetailActivity.class);
 
         // put now playing' object to intent
-        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, movieList.get(position));
+        goToDetail.putExtra(DetailActivity.EXTRA_FILM, movieList.get(position));
         startActivity(goToDetail);
     }
 }

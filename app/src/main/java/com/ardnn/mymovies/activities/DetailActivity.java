@@ -3,19 +3,26 @@ package com.ardnn.mymovies.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.Film;
+import com.ardnn.mymovies.models.Genre;
+import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class DetailActivity extends AppCompatActivity {
 
     // extras
-    public static final String EXTRA_MOVIE = "extra_movie";
+    public static final String EXTRA_FILM = "extra_film";
 
     // widgets
     ImageView ivPoster;
@@ -39,12 +46,21 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setMovieData() {
         // get data from previous intent
-        Film film = getIntent().getParcelableExtra(EXTRA_MOVIE);
+        Film film = getIntent().getParcelableExtra(EXTRA_FILM);
         String title = film.getName();
         String synopsis = film.getSynopsis();
         String wallpaperUrl = film.getWallpaperUrl();
         String releaseDate = Util.convertToDate(film.getReleaseDate());
         double vote = film.getVote();
+
+        // get genres
+        Map<Integer, String> genreMap = film instanceof Movie ?
+                Genre.genreMovieMap : Genre.genreTvMap;
+        List<Integer> genreIdList = film.getGenreIdList();
+        List<String> genreList = new ArrayList<>();
+        for (Integer id : genreIdList) {
+            genreList.add(genreMap.get(id));
+        }
 
         // set to widgets
         tvTitle.setText(title);

@@ -17,12 +17,17 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.adapters.TvShowAdapter;
+import com.ardnn.mymovies.models.Genre;
+import com.ardnn.mymovies.models.GenreResponse;
 import com.ardnn.mymovies.models.TvShow;
 import com.ardnn.mymovies.models.TvShowResponse;
 import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.networks.GenreApiClient;
+import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.TvShowApiClient;
 import com.ardnn.mymovies.networks.TvShowApiInterface;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -94,6 +99,36 @@ public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemCli
                 Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // load genre tv data
+        if (Genre.genreTvMap == null) {
+            GenreApiInterface genreApiInterface = GenreApiClient.getRetrofit()
+                    .create(GenreApiInterface.class);
+
+            Call<GenreResponse> genreResponseCall = genreApiInterface.getGenreTv(Const.API_KEY);
+            genreResponseCall.enqueue(new Callback<GenreResponse>() {
+                @Override
+                public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
+                    if (response.isSuccessful() && response.body().getGenreList() != null) {
+                        // put genre tv to list
+                        List<Genre> genreTvList = response.body().getGenreList();
+
+                        // initialize genreTvMap and add key-value pair to it with genreTvList data
+                        Genre.genreTvMap = new HashMap<>();
+                        for (Genre genre : genreTvList) {
+                            Genre.genreTvMap.put(genre.getId(), genre.getName());
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GenreResponse> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -101,7 +136,7 @@ public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemCli
         Intent goToDetail = new Intent(getActivity(), DetailActivity.class);
 
         // put airing today's objects to intent
-        goToDetail.putExtra(DetailActivity.EXTRA_MOVIE, tvShowList.get(position));
+        goToDetail.putExtra(DetailActivity.EXTRA_FILM, tvShowList.get(position));
         startActivity(goToDetail);
     }
 }

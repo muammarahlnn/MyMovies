@@ -1,6 +1,7 @@
 package com.ardnn.mymovies.utils;
 
 import android.text.Html;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +17,7 @@ public class Util {
                 "September", "October", "November", "December"
         };
         String[] splittedDate = date.split("-"); // [year, month, date]
-
+        Log.d("UTIL", date);
         return splittedDate[2] + " " + months[Integer.parseInt(splittedDate[1])] + ", " + splittedDate[0];
     }
 }

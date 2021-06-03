@@ -3,7 +3,7 @@ package com.ardnn.mymovies.networks;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MovieApiClient {
+public class NowPlayingApiClient {
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofit() {

@@ -1,14 +1,14 @@
 package com.ardnn.mymovies.networks;
 
-import com.ardnn.mymovies.models.TvShowResponse;
+import com.ardnn.mymovies.models.AiringTodayResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface TvShowApiInterface {
+public interface AiringTodayApiInterface {
     @GET("airing_today")
-    Call<TvShowResponse> getAiringToday(
+    Call<AiringTodayResponse> getAiringToday(
             @Query("api_key") String apiKey
     );
 }

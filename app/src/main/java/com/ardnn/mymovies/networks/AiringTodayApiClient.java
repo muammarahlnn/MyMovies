@@ -3,7 +3,7 @@ package com.ardnn.mymovies.networks;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TvShowApiClient {
+public class AiringTodayApiClient {
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofit() {
@@ -15,5 +15,4 @@ public class TvShowApiClient {
         }
         return retrofit;
     }
-
 }

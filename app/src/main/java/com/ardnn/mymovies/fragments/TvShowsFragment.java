@@ -1,6 +1,5 @@
 package com.ardnn.mymovies.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,18 +13,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
-import com.ardnn.mymovies.adapters.TvShowAdapter;
+import com.ardnn.mymovies.adapters.AiringTodayAdapter;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.GenreResponse;
-import com.ardnn.mymovies.models.TvShow;
-import com.ardnn.mymovies.models.TvShowResponse;
+import com.ardnn.mymovies.models.AiringToday;
+import com.ardnn.mymovies.models.AiringTodayResponse;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
-import com.ardnn.mymovies.networks.TvShowApiClient;
-import com.ardnn.mymovies.networks.TvShowApiInterface;
+import com.ardnn.mymovies.networks.AiringTodayApiClient;
+import com.ardnn.mymovies.networks.AiringTodayApiInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,15 +32,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemClick {
+public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnItemClick {
 
     // widgets
     private ProgressBar pbTvShows;
 
     // recyclerview attr
-    private RecyclerView rvTvShows;
-    private TvShowAdapter tvShowAdapter;
-    private List<TvShow> tvShowList;
+    private RecyclerView rvAiringToday;
+    private AiringTodayAdapter airingTodayAdapter;
+    private List<AiringToday> airingTodayList;
 
     public static TvShowsFragment newInstance() {
         TvShowsFragment fragment = new TvShowsFragment();
@@ -63,28 +61,28 @@ public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemCli
         pbTvShows = view.findViewById(R.id.pb_tv_shows);
 
         // set recyclerview
-        rvTvShows = view.findViewById(R.id.rv_tv_shows);
-        rvTvShows.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        rvAiringToday = view.findViewById(R.id.rv_tv_shows);
+        rvAiringToday.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         loadData();
         return view;
     }
 
     private void loadData() {
-        TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
-                .create(TvShowApiInterface.class);
+        AiringTodayApiInterface airingTodayApiInterface = AiringTodayApiClient.getRetrofit()
+                .create(AiringTodayApiInterface.class);
 
-        Call<TvShowResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY);
-        airingTodayResponseCall.enqueue(new Callback<TvShowResponse>() {
+        Call<AiringTodayResponse> airingTodayResponseCall = airingTodayApiInterface.getAiringToday(Const.API_KEY);
+        airingTodayResponseCall.enqueue(new Callback<AiringTodayResponse>() {
             @Override
-            public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+            public void onResponse(Call<AiringTodayResponse> call, Response<AiringTodayResponse> response) {
                 if (response.isSuccessful() && response.body().getAiringTodayList() != null) {
                     // put NowPlaying's data to list
-                    tvShowList = response.body().getAiringTodayList();
+                    airingTodayList = response.body().getAiringTodayList();
 
                     // set recyclerview adapter
-                    tvShowAdapter = new TvShowAdapter(tvShowList, TvShowsFragment.this);
-                    rvTvShows.setAdapter(tvShowAdapter);
+                    airingTodayAdapter = new AiringTodayAdapter(airingTodayList, TvShowsFragment.this);
+                    rvAiringToday.setAdapter(airingTodayAdapter);
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }
@@ -95,7 +93,7 @@ public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemCli
             }
 
             @Override
-            public void onFailure(Call<TvShowResponse> call, Throwable t) {
+            public void onFailure(Call<AiringTodayResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -132,11 +130,7 @@ public class TvShowsFragment extends Fragment implements TvShowAdapter.OnItemCli
     }
 
     @Override
-    public void onClick(int position) {
-        Intent goToDetail = new Intent(getActivity(), DetailActivity.class);
-
-        // put airing today's objects to intent
-        goToDetail.putExtra(DetailActivity.EXTRA_FILM, tvShowList.get(position));
-        startActivity(goToDetail);
+    public void itemClicked(int position) {
+        Toast.makeText(getActivity(), "You clicked " + airingTodayList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

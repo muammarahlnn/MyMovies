@@ -45,36 +45,36 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setMovieData() {
-        // get data from previous intent
-        Film film = getIntent().getParcelableExtra(EXTRA_FILM);
-        String title = film.getName();
-        String synopsis = film.getSynopsis();
-        String wallpaperUrl = film.getWallpaperUrl();
-        String releaseDate = Util.convertToDate(film.getReleaseDate());
-        double vote = film.getVote();
-
-        // get genres
-        Map<Integer, String> genreMap = film instanceof Movie ?
-                Genre.genreMovieMap : Genre.genreTvMap;
-        List<Integer> genreIdList = film.getGenreIdList();
-        List<String> genreList = new ArrayList<>();
-        for (Integer id : genreIdList) {
-            genreList.add(genreMap.get(id));
-        }
-
-        // set to widgets
-        tvTitle.setText(title);
-        tvSynopsis.setText(synopsis);
-        tvReleaseDate.setText(releaseDate);
-        tvVote.setText(String.valueOf(vote));
-        Glide.with(this)
-                .load(Const.IMG_URL_500 + wallpaperUrl)
-                .into(ivPoster);
-
-        // change title action bar
-        assert getSupportActionBar() != null : "Tenai action bar na";
-        Util.changeActionBarTitle(this, title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        // get data from previous intent
+//        Film film = getIntent().getParcelableExtra(EXTRA_FILM);
+//        String title = film.getName();
+//        String synopsis = film.getSynopsis();
+//        String wallpaperUrl = film.getWallpaperUrl();
+//        String releaseDate = Util.convertToDate(film.getReleaseDate());
+//        double vote = film.getVote();
+//
+//        // get genres
+//        Map<Integer, String> genreMap = film instanceof Movie ?
+//                Genre.genreMovieMap : Genre.genreTvMap;
+//        List<Integer> genreIdList = film.getGenreIdList();
+//        List<String> genreList = new ArrayList<>();
+//        for (Integer id : genreIdList) {
+//            genreList.add(genreMap.get(id));
+//        }
+//
+//        // set to widgets
+//        tvTitle.setText(title);
+//        tvSynopsis.setText(synopsis);
+//        tvReleaseDate.setText(releaseDate);
+//        tvVote.setText(String.valueOf(vote));
+//        Glide.with(this)
+//                .load(Const.IMG_URL_500 + wallpaperUrl)
+//                .into(ivPoster);
+//
+//        // change title action bar
+//        assert getSupportActionBar() != null : "Tenai action bar na";
+//        Util.changeActionBarTitle(this, title);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 

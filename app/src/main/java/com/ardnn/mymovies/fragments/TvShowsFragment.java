@@ -22,8 +22,8 @@ import com.ardnn.mymovies.models.AiringTodayResponse;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
-import com.ardnn.mymovies.networks.AiringTodayApiClient;
-import com.ardnn.mymovies.networks.AiringTodayApiInterface;
+import com.ardnn.mymovies.networks.TvShowApiClient;
+import com.ardnn.mymovies.networks.TvShowApiInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,10 +69,10 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
     }
 
     private void loadData() {
-        AiringTodayApiInterface airingTodayApiInterface = AiringTodayApiClient.getRetrofit()
-                .create(AiringTodayApiInterface.class);
+        TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
+                .create(TvShowApiInterface.class);
 
-        Call<AiringTodayResponse> airingTodayResponseCall = airingTodayApiInterface.getAiringToday(Const.API_KEY);
+        Call<AiringTodayResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY);
         airingTodayResponseCall.enqueue(new Callback<AiringTodayResponse>() {
             @Override
             public void onResponse(Call<AiringTodayResponse> call, Response<AiringTodayResponse> response) {

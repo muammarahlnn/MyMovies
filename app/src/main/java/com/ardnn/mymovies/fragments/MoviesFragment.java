@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.activities.DetailActivity;
 import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.adapters.NowPlayingAdapter;
 import com.ardnn.mymovies.models.Genre;
@@ -23,8 +22,8 @@ import com.ardnn.mymovies.models.NowPlaying;
 import com.ardnn.mymovies.networks.Const;
 import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
-import com.ardnn.mymovies.networks.NowPlayingApiClient;
-import com.ardnn.mymovies.networks.NowPlayingApiInterface;
+import com.ardnn.mymovies.networks.MovieApiClient;
+import com.ardnn.mymovies.networks.MovieApiInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,10 +72,10 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
 
     private void loadData() {
         // load movies data
-        NowPlayingApiInterface nowPlayingApiInterface = NowPlayingApiClient.getRetrofit()
-                .create(NowPlayingApiInterface.class);
+        MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
+                .create(MovieApiInterface.class);
 
-        Call<NowPlayingResponse> nowPlayingResponseCall = nowPlayingApiInterface.getNowPlaying(Const.API_KEY);
+        Call<NowPlayingResponse> nowPlayingResponseCall = movieApiInterface.getNowPlaying(Const.API_KEY);
         nowPlayingResponseCall.enqueue(new Callback<NowPlayingResponse>() {
             @Override
             public void onResponse(Call<NowPlayingResponse> call, Response<NowPlayingResponse> response) {

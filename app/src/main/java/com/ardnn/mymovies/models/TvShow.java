@@ -1,78 +1,83 @@
 package com.ardnn.mymovies.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 
-public class TvShow extends Film implements Parcelable {
-    @SerializedName("name")
-    private String name;
+public class TvShow {
+    @SerializedName("backdrop_path")
+    private String wallpaperUrl;
+
+    @SerializedName("episode_run_time")
+    private int duration;
 
     @SerializedName("first_air_date")
-    private String firstAiring;
+    private String firstAirDate;
 
-    // parcelable methods ---------------------------------------------------
-    protected TvShow(Parcel in) {
-        name = in.readString();
-        firstAiring = in.readString();
-        synopsis = in.readString();
-        posterUrl = in.readString();
-        wallpaperUrl = in.readString();
-        vote = in.readDouble();
-        genreIdList = new ArrayList<>();
-        in.readList(genreIdList, Integer.class.getClassLoader());
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("last_air_date")
+    private String lastAirDate;
+
+    @SerializedName("name")
+    private String title;
+
+    @SerializedName("number_of_episodes")
+    private int numberOfEpisodes;
+
+    @SerializedName("number_of_seasons")
+    private int numberOfSeasons;
+
+    @SerializedName("overview")
+    private String synopsis;
+
+    @SerializedName("poster_path")
+    private String posterUrl;
+
+    @SerializedName("vote_average")
+    private double rating;
+
+    public String getWallpaperUrl() {
+        return wallpaperUrl;
     }
 
-    public static final Creator<TvShow> CREATOR = new Creator<TvShow>() {
-        @Override
-        public TvShow createFromParcel(Parcel in) {
-            return new TvShow(in);
-        }
-
-        @Override
-        public TvShow[] newArray(int size) {
-            return new TvShow[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getDuration() {
+        return duration;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(firstAiring);
-        dest.writeString(synopsis);
-        dest.writeString(posterUrl);
-        dest.writeString(wallpaperUrl);
-        dest.writeDouble(vote);
-        dest.writeList(genreIdList);
+    public String getFirstAirDate() {
+        return firstAirDate;
     }
 
-    // getter and setter -------------------------------
-    @Override
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    public String getLastAirDate() {
+        return lastAirDate;
     }
 
-    @Override
-    public String getReleaseDate() {
-        return firstAiring;
+    public String getTitle() {
+        return title;
     }
 
-    @Override
-    public void setReleaseDate(String date) {
-        this.firstAiring = date;
+    public int getNumberOfEpisodes() {
+        return numberOfEpisodes;
     }
 
+    public int getNumberOfSeasons() {
+        return numberOfSeasons;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public double getRating() {
+        return rating;
+    }
 }

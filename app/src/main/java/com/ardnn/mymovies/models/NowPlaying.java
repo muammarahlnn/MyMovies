@@ -2,6 +2,8 @@ package com.ardnn.mymovies.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class NowPlaying {
     @SerializedName("id")
     private int id;
@@ -17,6 +19,9 @@ public class NowPlaying {
 
     @SerializedName("vote_average")
     private double rating;
+
+    @SerializedName("genre_ids")
+    private List<Integer> genreIdList;
 
     public int getId() {
         return id;
@@ -36,5 +41,9 @@ public class NowPlaying {
 
     public double getRating() {
         return rating;
+    }
+
+    public List<Integer> getGenreIdList() {
+        return genreIdList;
     }
 }

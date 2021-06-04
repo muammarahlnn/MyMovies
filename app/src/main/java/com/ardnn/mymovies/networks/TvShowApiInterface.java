@@ -14,7 +14,7 @@ public interface TvShowApiInterface {
             @Query("api_key") String apiKey
     );
 
-    @GET()
+    @GET("{tv_id}")
     Call<TvShow> getTvShow(
             @Path("tv_id") String tvId,
             @Query("api_key") String apiKey

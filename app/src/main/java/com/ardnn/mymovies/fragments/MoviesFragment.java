@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.MainActivity;
+import com.ardnn.mymovies.activities.MovieDetailActivity;
 import com.ardnn.mymovies.adapters.NowPlayingAdapter;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.GenreResponse;
@@ -25,6 +27,7 @@ import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.MovieApiClient;
 import com.ardnn.mymovies.networks.MovieApiInterface;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,6 +139,16 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
 
     @Override
     public void itemClicked(int position) {
-        Toast.makeText(getActivity(), "You clicked " + nowPlayingList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        // go to movie detail
+        Intent goToMovieDetail = new Intent(getActivity(), MovieDetailActivity.class);
+        goToMovieDetail.putExtra(
+                MovieDetailActivity.EXTRA_ID,
+                nowPlayingList.get(position).getId()
+        );
+        goToMovieDetail.putIntegerArrayListExtra(
+                MovieDetailActivity.EXTRA_GENRES,
+                (ArrayList<Integer>) nowPlayingList.get(position).getGenreIdList()
+        );
+        startActivity(goToMovieDetail);
     }
 }

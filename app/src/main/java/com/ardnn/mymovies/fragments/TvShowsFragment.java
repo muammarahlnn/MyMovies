@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.MainActivity;
+import com.ardnn.mymovies.activities.TvShowDetailActivity;
 import com.ardnn.mymovies.adapters.AiringTodayAdapter;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.GenreResponse;
@@ -25,6 +27,7 @@ import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.TvShowApiClient;
 import com.ardnn.mymovies.networks.TvShowApiInterface;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -131,6 +134,16 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
 
     @Override
     public void itemClicked(int position) {
-        Toast.makeText(getActivity(), "You clicked " + airingTodayList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+        // go to tv show detail
+        Intent goToTvShowDetail = new Intent(getActivity(), TvShowDetailActivity.class);
+        goToTvShowDetail.putExtra(
+                TvShowDetailActivity.EXTRA_ID,
+                airingTodayList.get(position).getId()
+        );
+        goToTvShowDetail.putIntegerArrayListExtra(
+                TvShowDetailActivity.EXTRA_GENRES,
+                (ArrayList<Integer>) airingTodayList.get(position).getGenreIdList()
+        );
+        startActivity(goToTvShowDetail);
     }
 }

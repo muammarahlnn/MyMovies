@@ -2,13 +2,15 @@ package com.ardnn.mymovies.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 
 public class TvShow {
     @SerializedName("backdrop_path")
     private String wallpaperUrl;
 
     @SerializedName("episode_run_time")
-    private int duration;
+    private List<Integer> durationList;
 
     @SerializedName("first_air_date")
     private String firstAirDate;
@@ -41,8 +43,8 @@ public class TvShow {
         return wallpaperUrl;
     }
 
-    public int getDuration() {
-        return duration;
+    public List<Integer> getDurationList() {
+        return durationList;
     }
 
     public String getFirstAirDate() {

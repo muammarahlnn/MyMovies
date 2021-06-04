@@ -16,7 +16,7 @@ public class ProfileFragment extends Fragment {
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putString(MainActivity.EXTRA_STRING, "Profile");
+        args.putString(MainActivity.EXTRA_TITLE, "Profile");
         fragment.setArguments(args);
 
         return fragment;

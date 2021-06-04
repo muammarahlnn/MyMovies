@@ -1,6 +1,7 @@
 package com.ardnn.mymovies.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Movie movie;
 
     // widgets
+    private Toolbar toolbarDetail;
     private ImageView ivPoster;
     private TextView tvTitle, tvSynopsis, tvRating, tvReleaseDate;
 
@@ -45,6 +47,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         // initialize widgets
+        toolbarDetail = findViewById(R.id.toolbar_movie_detail);
+        setSupportActionBar(toolbarDetail);
+
         ivPoster = findViewById(R.id.iv_poster_movie_detail);
         tvTitle = findViewById(R.id.tv_title_movie_detail);
         tvSynopsis = findViewById(R.id.tv_synopsis_movie_detail);
@@ -112,7 +117,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         // change title action bar
         assert getSupportActionBar() != null : "Tenai action bar na";
-        Util.changeActionBarTitle(this, title);
+        getSupportActionBar().setTitle(title);
+//        Util.changeActionBarTitle(this, title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }

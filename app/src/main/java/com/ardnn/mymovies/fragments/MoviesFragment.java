@@ -1,6 +1,9 @@
 package com.ardnn.mymovies.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -48,7 +51,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
     public static MoviesFragment newInstance() {
         MoviesFragment fragment = new MoviesFragment();
         Bundle args = new Bundle();
-        args.putString(MainActivity.EXTRA_STRING, "Movies");
+        args.putString(MainActivity.EXTRA_TITLE, "Movies");
         fragment.setArguments(args);
 
         return fragment;

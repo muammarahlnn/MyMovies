@@ -48,7 +48,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
     public static TvShowsFragment newInstance() {
         TvShowsFragment fragment = new TvShowsFragment();
         Bundle args = new Bundle();
-        args.putString(MainActivity.EXTRA_STRING, "TV Shows");
+        args.putString(MainActivity.EXTRA_TITLE, "TV Shows");
         fragment.setArguments(args);
 
         return fragment;

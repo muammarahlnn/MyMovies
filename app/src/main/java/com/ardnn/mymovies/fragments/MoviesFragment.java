@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,8 +52,12 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
 
     // recyclerview attr
     private RecyclerView rvNowPlaying;
+    private GridLayoutManager gridLayoutManager;
     private NowPlayingAdapter nowPlayingAdapter;
-    private List<NowPlaying> nowPlayingList;
+    private final List<NowPlaying> nowPlayingList = new ArrayList<>();
+    private int pageNowPlaying = 1;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private boolean isLoading = true;
 
     public static MoviesFragment newInstance() {
         return new MoviesFragment();
@@ -70,10 +75,38 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
 
         // set recyclerview
         rvNowPlaying = view.findViewById(R.id.rv_movies);
-        rvNowPlaying.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        rvNowPlaying.setLayoutManager(gridLayoutManager);
+
+        // set recyclerview adapter
+        nowPlayingAdapter = new NowPlayingAdapter(nowPlayingList, MoviesFragment.this);
+        rvNowPlaying.setAdapter(nowPlayingAdapter);
 
         // load data from TMDB API
-        loadData();
+        loadData(pageNowPlaying);
+
+        // check recyclerview last item
+        rvNowPlaying.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
+                    totalItemCount = gridLayoutManager.getItemCount();
+
+                    if (isLoading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        isLoading = false;
+
+                        Log.d("MOVIES", "End recyclverview reached.");
+                        loadData(++pageNowPlaying);
+
+                        isLoading = true;
+                    }
+
+                }
+            }
+        });
 
         return view;
     }
@@ -101,22 +134,23 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
         });
     }
 
-    private void loadData() {
+    private void loadData(int page) {
         // load movies data
         MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
 
-        Call<NowPlayingResponse> nowPlayingResponseCall = movieApiInterface.getNowPlaying(Const.API_KEY);
+        Call<NowPlayingResponse> nowPlayingResponseCall = movieApiInterface.getNowPlaying(Const.API_KEY, page);
         nowPlayingResponseCall.enqueue(new Callback<NowPlayingResponse>() {
             @Override
             public void onResponse(Call<NowPlayingResponse> call, Response<NowPlayingResponse> response) {
                 if (response.isSuccessful() && response.body().getNowPlayingList() != null) {
-                    // put NowPlaying's data to list
-                    nowPlayingList = response.body().getNowPlayingList();
-
-                    // set recyclerview adapter
-                    nowPlayingAdapter = new NowPlayingAdapter(nowPlayingList, MoviesFragment.this);
-                    rvNowPlaying.setAdapter(nowPlayingAdapter);
+                    // add NowPlaying's data to list
+                    List<NowPlaying> tempList = response.body().getNowPlayingList();
+                    if (page == 1) {
+                        nowPlayingList.clear();
+                    }
+                    nowPlayingList.addAll(tempList);
+                    nowPlayingAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }

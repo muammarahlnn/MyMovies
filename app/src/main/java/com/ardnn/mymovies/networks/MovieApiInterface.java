@@ -11,12 +11,13 @@ import retrofit2.http.Query;
 public interface MovieApiInterface {
     @GET("now_playing")
     Call<NowPlayingResponse> getNowPlaying(
-            @Query("api_key") String apiKey
+            @Query("api_key") String apiKey,
+            @Query("page") int page
     );
 
     @GET("{movie_id}")
     Call<Movie> getMovie(
-            @Path("movie_id") String movieId,
+            @Path("movie_id") int movieId,
             @Query("api_key") String apiKey
     );
 

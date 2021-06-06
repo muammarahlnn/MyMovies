@@ -65,7 +65,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
 
-        String movieId = String.valueOf(getIntent().getIntExtra(EXTRA_ID, 0));
+        int movieId = getIntent().getIntExtra(EXTRA_ID, 0);
         Call<Movie> movieCall = movieApiInterface.getMovie(movieId, Const.API_KEY);
         movieCall.enqueue(new Callback<Movie>() {
             @Override

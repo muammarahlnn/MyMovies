@@ -11,12 +11,13 @@ import retrofit2.http.Query;
 public interface TvShowApiInterface {
     @GET("airing_today")
     Call<AiringTodayResponse> getAiringToday(
-            @Query("api_key") String apiKey
+            @Query("api_key") String apiKey,
+            @Query("page") int page
     );
 
     @GET("{tv_id}")
     Call<TvShow> getTvShow(
-            @Path("tv_id") String tvId,
+            @Path("tv_id") int tvId,
             @Query("api_key") String apiKey
     );
 }

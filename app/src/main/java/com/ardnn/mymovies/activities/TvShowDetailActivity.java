@@ -65,7 +65,7 @@ public class TvShowDetailActivity extends AppCompatActivity {
         TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
                 .create(TvShowApiInterface.class);
 
-        String tvId = String.valueOf(getIntent().getIntExtra(EXTRA_ID, 0));
+        int tvId = getIntent().getIntExtra(EXTRA_ID, 0);
         Call<TvShow> tvCall = tvShowApiInterface.getTvShow(tvId, Const.API_KEY);
         tvCall.enqueue(new Callback<TvShow>() {
             @Override

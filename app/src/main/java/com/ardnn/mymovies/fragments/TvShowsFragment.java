@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,8 +52,12 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
 
     // recyclerview attr
     private RecyclerView rvAiringToday;
+    private GridLayoutManager gridLayoutManager;
     private AiringTodayAdapter airingTodayAdapter;
-    private List<AiringToday> airingTodayList;
+    private final List<AiringToday> airingTodayList = new ArrayList<>();
+    private int pageAiringToday = 1;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private boolean isLoading = true;
 
     public static TvShowsFragment newInstance() {
         return new TvShowsFragment();
@@ -70,10 +75,37 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
 
         // set recyclerview
         rvAiringToday = view.findViewById(R.id.rv_tv_shows);
-        rvAiringToday.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        rvAiringToday.setLayoutManager(gridLayoutManager);
+
+        // set recyclerview adapter
+        airingTodayAdapter = new AiringTodayAdapter(airingTodayList, TvShowsFragment.this);
+        rvAiringToday.setAdapter(airingTodayAdapter);
 
         // load data from TMDB API
-        loadData();
+        loadData(pageAiringToday);
+
+        // check recyclerview last item
+        rvAiringToday.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    visibleItemCount = gridLayoutManager.getChildCount();
+                    pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
+                    totalItemCount = gridLayoutManager.getItemCount();
+
+                    if (isLoading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        isLoading = false;
+
+                        Log.d("TV SHOWS", "End recyclverview reached.");
+                        loadData(++pageAiringToday);
+
+                        isLoading = true;
+                    }
+                }
+            }
+        });
 
         return view;
     }
@@ -101,21 +133,22 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
         });
     }
 
-    private void loadData() {
+    private void loadData(int page) {
         TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
                 .create(TvShowApiInterface.class);
 
-        Call<AiringTodayResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY);
+        Call<AiringTodayResponse> airingTodayResponseCall = tvShowApiInterface.getAiringToday(Const.API_KEY, page);
         airingTodayResponseCall.enqueue(new Callback<AiringTodayResponse>() {
             @Override
             public void onResponse(Call<AiringTodayResponse> call, Response<AiringTodayResponse> response) {
                 if (response.isSuccessful() && response.body().getAiringTodayList() != null) {
-                    // put NowPlaying's data to list
-                    airingTodayList = response.body().getAiringTodayList();
-
-                    // set recyclerview adapter
-                    airingTodayAdapter = new AiringTodayAdapter(airingTodayList, TvShowsFragment.this);
-                    rvAiringToday.setAdapter(airingTodayAdapter);
+                    // add NowPlaying's data to list
+                    List<AiringToday> tempList = response.body().getAiringTodayList();
+                    if (page == 1) {
+                        airingTodayList.clear();
+                    }
+                    airingTodayList.addAll(tempList);
+                    airingTodayAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                 }

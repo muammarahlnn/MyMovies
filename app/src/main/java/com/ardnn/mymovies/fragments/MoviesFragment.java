@@ -1,19 +1,24 @@
 package com.ardnn.mymovies.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
@@ -29,6 +34,7 @@ import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.MovieApiClient;
 import com.ardnn.mymovies.networks.MovieApiInterface;
+import com.ardnn.mymovies.utils.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,12 +55,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
     private List<NowPlaying> nowPlayingList;
 
     public static MoviesFragment newInstance() {
-        MoviesFragment fragment = new MoviesFragment();
-        Bundle args = new Bundle();
-        args.putString(MainActivity.EXTRA_TITLE, "Movies");
-        fragment.setArguments(args);
-
-        return fragment;
+        return new MoviesFragment();
     }
 
     @Override
@@ -62,6 +63,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_movies, container, false);
+        setHasOptionsMenu(true);
 
         // initialize widgets
         pbMovies = view.findViewById(R.id.pb_movies);
@@ -70,10 +72,33 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
         rvNowPlaying = view.findViewById(R.id.rv_movies);
         rvNowPlaying.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
+        // load data from TMDB API
         loadData();
 
-
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.toolbar_main_item, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        // if user is searching a movie
+        MenuItem searchItem = menu.findItem(R.id.toolbar_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                nowPlayingAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     private void loadData() {

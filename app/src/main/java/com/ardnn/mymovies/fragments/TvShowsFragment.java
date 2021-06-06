@@ -3,14 +3,22 @@ package com.ardnn.mymovies.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
@@ -26,6 +34,7 @@ import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.TvShowApiClient;
 import com.ardnn.mymovies.networks.TvShowApiInterface;
+import com.ardnn.mymovies.utils.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,12 +55,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
     private List<AiringToday> airingTodayList;
 
     public static TvShowsFragment newInstance() {
-        TvShowsFragment fragment = new TvShowsFragment();
-        Bundle args = new Bundle();
-        args.putString(MainActivity.EXTRA_TITLE, "TV Shows");
-        fragment.setArguments(args);
-
-        return fragment;
+        return new TvShowsFragment();
     }
 
     @Override
@@ -59,6 +63,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tv_shows, container, false);
+        setHasOptionsMenu(true);
 
         // initialize widgets
         pbTvShows = view.findViewById(R.id.pb_tv_shows);
@@ -67,8 +72,33 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
         rvAiringToday = view.findViewById(R.id.rv_tv_shows);
         rvAiringToday.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
+        // load data from TMDB API
         loadData();
+
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.toolbar_main_item, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        // if user is searching a tv shows
+        MenuItem searchItem = menu.findItem(R.id.toolbar_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                airingTodayAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     private void loadData() {

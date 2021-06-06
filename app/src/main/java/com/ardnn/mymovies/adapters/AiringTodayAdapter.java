@@ -3,6 +3,8 @@ package com.ardnn.mymovies.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,16 +16,19 @@ import com.ardnn.mymovies.models.AiringToday;
 import com.ardnn.mymovies.networks.Const;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.ViewHolder> {
+public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.ViewHolder> implements Filterable {
     private final List<AiringToday> airingTodayList;
+    private final List<AiringToday> airingTodayListFull;
     private final OnItemClick onItemClick;
 
     public AiringTodayAdapter(List<AiringToday> airingTodayList, OnItemClick onItemClick) {
         this.airingTodayList = airingTodayList;
         this.onItemClick = onItemClick;
+        airingTodayListFull = new ArrayList<>(airingTodayList);
     }
 
     @NonNull
@@ -44,6 +49,41 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
     public int getItemCount() {
         return airingTodayList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return airingTodayFilter;
+    }
+
+    private final Filter airingTodayFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<AiringToday> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(airingTodayListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (AiringToday airingToday : airingTodayListFull) {
+                    String title = airingToday.getTitle().toLowerCase();
+                    String year = airingToday.getReleaseDate().substring(0, 4);
+                    if (title.startsWith(filterPattern) || year.startsWith(filterPattern)) {
+                        filteredList.add(airingToday);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            airingTodayList.clear();
+            airingTodayList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTitle, tvYear, tvRating;

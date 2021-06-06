@@ -3,6 +3,8 @@ package com.ardnn.mymovies.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,15 +16,18 @@ import com.ardnn.mymovies.models.NowPlaying;
 import com.ardnn.mymovies.networks.Const;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> {
+public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> implements Filterable {
     private final List<NowPlaying> nowPlayingList;
+    private final List<NowPlaying> nowPlayingListFull;
     private final OnItemClick onItemClick;
 
     public NowPlayingAdapter(List<NowPlaying> nowPlayingList, OnItemClick onItemClick) {
         this.nowPlayingList = nowPlayingList;
         this.onItemClick = onItemClick;
+        nowPlayingListFull = new ArrayList<>(nowPlayingList);
     }
 
     @NonNull
@@ -43,6 +48,41 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
     public int getItemCount() {
         return nowPlayingList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return nowPlayingFilter;
+    }
+
+    private final Filter nowPlayingFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<NowPlaying> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(nowPlayingListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (NowPlaying nowPlaying : nowPlayingListFull) {
+                    String title = nowPlaying.getTitle().toLowerCase();
+                    String year = nowPlaying.getReleaseDate().substring(0, 4);
+                    if (title.startsWith(filterPattern) || year.startsWith(filterPattern)) {
+                        filteredList.add(nowPlaying);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            nowPlayingList.clear();
+            nowPlayingList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTitle, tvYear, tvRating;

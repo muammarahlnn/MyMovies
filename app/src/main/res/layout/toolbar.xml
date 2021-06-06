@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/black_primary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    app:titleTextColor="@color/yellow_primary">
+    app:titleTextColor="@color/yellow_primary"
+    app:menu="@menu/toolbar_main_item">
 
     <ImageView
         android:id="@+id/iv_icon_toolbar"

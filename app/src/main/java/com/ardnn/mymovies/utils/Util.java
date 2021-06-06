@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,8 +10,19 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ardnn.mymovies.R;
 
+import java.util.Objects;
+
 public class Util {
     public static boolean isSearching = false;
+
+    @SuppressLint("StaticFieldLeak")
+    private static Toolbar toolbar;
+
+    @SuppressLint("StaticFieldLeak")
+    private static TextView tvTitle;
+
+    @SuppressLint("StaticFieldLeak")
+    private static ImageView ivIcon;
 
     public static String convertToDate(String date) {
         String[] months = {"",
@@ -22,17 +34,19 @@ public class Util {
         return splittedDate[2] + " " + months[Integer.parseInt(splittedDate[1])] + ", " + splittedDate[0];
     }
 
+    public static void initializeActionBar(Activity activity) {
+        toolbar = activity.findViewById(R.id.toolbar_main);
+        tvTitle = activity.findViewById(R.id.tv_title_toolbar);
+        ivIcon = activity.findViewById(R.id.iv_icon_toolbar);
+    }
+
     public static void setActionBar(Activity activity, String title, int icon) {
-        Toolbar toolbar = activity.findViewById(R.id.toolbar_main);
         ((AppCompatActivity) activity).setSupportActionBar(toolbar);
-        ((AppCompatActivity) activity).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(((AppCompatActivity) activity).getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
 
-        TextView tvTitle = activity.findViewById(R.id.tv_title_toolbar);
         tvTitle.setText(title);
-
-        ImageView ivIcon = activity.findViewById(R.id.iv_icon_toolbar);
         ivIcon.setBackgroundResource(icon);
     }
 }

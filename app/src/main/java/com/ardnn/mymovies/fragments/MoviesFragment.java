@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,13 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.activities.MovieDetailActivity;
 import com.ardnn.mymovies.adapters.NowPlayingAdapter;
 import com.ardnn.mymovies.models.Genre;
@@ -95,7 +91,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
                     pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
                     totalItemCount = gridLayoutManager.getItemCount();
 
-                    if (isLoading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         isLoading = false;
 
                         Log.d("MOVIES", "End recyclverview reached.");
@@ -129,6 +125,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
             @Override
             public boolean onQueryTextChange(String newText) {
                 nowPlayingAdapter.getFilter().filter(newText);
+                Util.isSearching = true;
                 return true;
             }
         });

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.AiringToday;
 import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
             List<AiringToday> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(airingTodayListFull);
+                Util.isSearching =  false;
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 for (AiringToday airingToday : airingTodayListFull) {

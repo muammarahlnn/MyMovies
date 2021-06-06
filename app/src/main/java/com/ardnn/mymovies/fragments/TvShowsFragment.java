@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,13 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
-import com.ardnn.mymovies.activities.MainActivity;
 import com.ardnn.mymovies.activities.TvShowDetailActivity;
 import com.ardnn.mymovies.adapters.AiringTodayAdapter;
 import com.ardnn.mymovies.models.Genre;
@@ -95,7 +91,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
                     pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
                     totalItemCount = gridLayoutManager.getItemCount();
 
-                    if (isLoading && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         isLoading = false;
 
                         Log.d("TV SHOWS", "End recyclverview reached.");
@@ -128,6 +124,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
             @Override
             public boolean onQueryTextChange(String newText) {
                 airingTodayAdapter.getFilter().filter(newText);
+                Util.isSearching = true;
                 return true;
             }
         });

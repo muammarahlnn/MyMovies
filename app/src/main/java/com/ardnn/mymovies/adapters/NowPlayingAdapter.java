@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.NowPlaying;
 import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.List;
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> implements Filterable {
     private final List<NowPlaying> nowPlayingList;
     private List<NowPlaying> nowPlayingListFull;
-    private List<NowPlaying> searchedList;
     private final OnItemClick onItemClick;
 
     public NowPlayingAdapter(List<NowPlaying> nowPlayingList, OnItemClick onItemClick) {
@@ -65,6 +65,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
             List<NowPlaying> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(nowPlayingListFull);
+                Util.isSearching = false;
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 for (NowPlaying nowPlaying : nowPlayingListFull) {

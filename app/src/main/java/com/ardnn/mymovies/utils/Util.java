@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.ardnn.mymovies.R;
 
 public class Util {
+    public static boolean isSearching = false;
+
     public static String convertToDate(String date) {
         String[] months = {"",
                 "January", "February", "March", "April",

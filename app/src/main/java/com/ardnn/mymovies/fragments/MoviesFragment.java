@@ -150,6 +150,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
                         nowPlayingList.clear();
                     }
                     nowPlayingList.addAll(tempList);
+                    nowPlayingAdapter.updateListFull(nowPlayingList);
                     nowPlayingAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();

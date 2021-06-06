@@ -21,13 +21,18 @@ import java.util.List;
 
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> implements Filterable {
     private final List<NowPlaying> nowPlayingList;
-    private final List<NowPlaying> nowPlayingListFull;
+    private List<NowPlaying> nowPlayingListFull;
+    private List<NowPlaying> searchedList;
     private final OnItemClick onItemClick;
 
     public NowPlayingAdapter(List<NowPlaying> nowPlayingList, OnItemClick onItemClick) {
         this.nowPlayingList = nowPlayingList;
         this.onItemClick = onItemClick;
         nowPlayingListFull = new ArrayList<>(nowPlayingList);
+    }
+
+    public void updateListFull(List<NowPlaying> updatedList) {
+        this.nowPlayingListFull = new ArrayList<>(updatedList);
     }
 
     @NonNull

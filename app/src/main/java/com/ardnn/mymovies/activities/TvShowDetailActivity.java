@@ -102,11 +102,6 @@ public class TvShowDetailActivity extends AppCompatActivity {
             genreList.add(genreMap.get(id));
         }
 
-        // debug
-        for (String genre : genreList) {
-            Log.d("MOVIE DETAIL", genre);
-        }
-
         // set to widgets
         tvTitle.setText(title);
         tvSynopsis.setText(synopsis);

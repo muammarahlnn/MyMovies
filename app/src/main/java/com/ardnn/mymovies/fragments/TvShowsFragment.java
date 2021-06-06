@@ -148,6 +148,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
                         airingTodayList.clear();
                     }
                     airingTodayList.addAll(tempList);
+                    airingTodayAdapter.updateListFull(airingTodayList);
                     airingTodayAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();

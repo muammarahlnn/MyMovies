@@ -22,13 +22,17 @@ import java.util.List;
 
 public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.ViewHolder> implements Filterable {
     private final List<AiringToday> airingTodayList;
-    private final List<AiringToday> airingTodayListFull;
+    private List<AiringToday> airingTodayListFull;
     private final OnItemClick onItemClick;
 
     public AiringTodayAdapter(List<AiringToday> airingTodayList, OnItemClick onItemClick) {
         this.airingTodayList = airingTodayList;
         this.onItemClick = onItemClick;
         airingTodayListFull = new ArrayList<>(airingTodayList);
+    }
+
+    public void updateListFull(List<AiringToday> updatedList) {
+        this.airingTodayListFull = new ArrayList<>(updatedList);
     }
 
     @NonNull

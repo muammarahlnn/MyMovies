@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
+import com.ardnn.mymovies.models.Cast;
+import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.TvShow;
 import com.ardnn.mymovies.networks.Const;
@@ -40,13 +42,30 @@ public class TvShowDetailActivity extends AppCompatActivity {
     private ImageView ivPoster;
     private TextView tvTitle, tvSynopsis, tvRating, tvReleaseDate;
 
+    // attributes
+    private TvShowApiInterface tvShowApiInterface;
+    private int tvId;
+    private List<Cast> castList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_show_detail);
 
-        // initialize widgets
+        // initialization
+        initialization();
+
+        // load tvShow data
+        loadTvShowData();
+        loadTvShowCast();
+
+    }
+
+    private void initialization() {
+        tvShowApiInterface = TvShowApiClient.getRetrofit()
+                .create(TvShowApiInterface.class);
+        tvId = getIntent().getIntExtra(EXTRA_ID, 0);
+
         toolbarDetail = findViewById(R.id.toolbar_tv_show_detail);
         setSupportActionBar(toolbarDetail);
 
@@ -55,17 +74,9 @@ public class TvShowDetailActivity extends AppCompatActivity {
         tvSynopsis = findViewById(R.id.tv_synopsis_tv_show_detail);
         tvRating = findViewById(R.id.tv_rating_tv_show_detail);
         tvReleaseDate = findViewById(R.id.tv_release_date_tv_show_detail);
-
-        // load tvShow detail data
-        loadTvShowData();
-
     }
 
     private void loadTvShowData() {
-        TvShowApiInterface tvShowApiInterface = TvShowApiClient.getRetrofit()
-                .create(TvShowApiInterface.class);
-
-        int tvId = getIntent().getIntExtra(EXTRA_ID, 0);
         Call<TvShow> tvCall = tvShowApiInterface.getTvShow(tvId, Const.API_KEY);
         tvCall.enqueue(new Callback<TvShow>() {
             @Override
@@ -85,6 +96,26 @@ public class TvShowDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadTvShowCast() {
+        Call<CastResponse> castResponseCall = tvShowApiInterface.getCast(tvId, Const.API_KEY);
+        castResponseCall.enqueue(new Callback<CastResponse>() {
+            @Override
+            public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
+                if (response.isSuccessful() && response.body().getCastList() != null) {
+                    castList = response.body().getCastList();
+                } else {
+                    Toast.makeText(TvShowDetailActivity.this, "Response failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CastResponse> call, Throwable t) {
+                Log.d("TV SHOW DETAIL", t.getLocalizedMessage());
+                Toast.makeText(TvShowDetailActivity.this, "Response failure.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setTvShowData() {

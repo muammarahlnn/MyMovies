@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.networks;
 
+import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.models.NowPlayingResponse;
 
@@ -17,6 +18,12 @@ public interface MovieApiInterface {
 
     @GET("{movie_id}")
     Call<Movie> getMovie(
+            @Path("movie_id") int movieId,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("{movie_id}/credits")
+    Call<CastResponse> getCast(
             @Path("movie_id") int movieId,
             @Query("api_key") String apiKey
     );

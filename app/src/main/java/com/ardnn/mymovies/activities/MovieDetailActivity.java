@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
+import com.ardnn.mymovies.models.Cast;
+import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.networks.Const;
@@ -40,13 +42,21 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ImageView ivPoster;
     private TextView tvTitle, tvSynopsis, tvRating, tvReleaseDate;
 
+    // attributes
+    private MovieApiInterface movieApiInterface;
+    private int movieId;
+    private List<Cast> castList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        // initialize widgets
+        // initialization
+        movieApiInterface = MovieApiClient.getRetrofit()
+                .create(MovieApiInterface.class);
+        movieId = getIntent().getIntExtra(EXTRA_ID, 0);
+
         toolbarDetail = findViewById(R.id.toolbar_movie_detail);
         setSupportActionBar(toolbarDetail);
 
@@ -56,16 +66,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvRating = findViewById(R.id.tv_rating_movie_detail);
         tvReleaseDate = findViewById(R.id.tv_release_date_movie_detail);
 
-        // load movie detail data
+        // load movie data
         loadMovieData();
-
+        loadMovieCast();
     }
 
     private void loadMovieData() {
-        MovieApiInterface movieApiInterface = MovieApiClient.getRetrofit()
-                .create(MovieApiInterface.class);
-
-        int movieId = getIntent().getIntExtra(EXTRA_ID, 0);
         Call<Movie> movieCall = movieApiInterface.getMovie(movieId, Const.API_KEY);
         movieCall.enqueue(new Callback<Movie>() {
             @Override
@@ -80,10 +86,31 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
+                Log.d("MOVIE DETAIL", t.getLocalizedMessage());
                 Toast.makeText(MovieDetailActivity.this, "Response failure.", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    private void loadMovieCast() {
+        Call<CastResponse> castResponseCall = movieApiInterface.getCast(movieId, Const.API_KEY);
+        castResponseCall.enqueue(new Callback<CastResponse>() {
+            @Override
+            public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
+                if (response.isSuccessful() && response.body().getCastList() != null) {
+                    castList = response.body().getCastList();
+                } else {
+                    Toast.makeText(MovieDetailActivity.this, "Response failed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CastResponse> call, Throwable t) {
+                Log.d("MOVIE DETAIL", t.getLocalizedMessage());
+                Toast.makeText(MovieDetailActivity.this, "Response failure.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setMovieData() {
@@ -101,11 +128,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             genreList.add(genreMap.get(id));
         }
 
-        // debug
-        for (String genre : genreList) {
-            Log.d("MOVIE DETAIL", genre);
-        }
-
         // set to widgets
         tvTitle.setText(title);
         tvSynopsis.setText(synopsis);
@@ -118,7 +140,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         // change title action bar
         assert getSupportActionBar() != null : "Tenai action bar na";
         getSupportActionBar().setTitle(title);
-//        Util.changeActionBarTitle(this, title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }

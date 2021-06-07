@@ -6,4 +6,7 @@
     <string name="label_tv_show">TV Shows</string>
     <string name="label_you">You</string>
     <string name="label_profile">Profile</string>
+    <string name="empty_favorite_movies">You haven\'t favorited any Movies yet</string>
+    <string name="empty_favorite_tv_shows">You haven\'t favorited any TV Shows yet</string>
+    <string name="label_favorite">Favorite</string>
 </resources>

@@ -55,10 +55,6 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private boolean isLoading = true;
 
-    public static MoviesFragment newInstance() {
-        return new MoviesFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

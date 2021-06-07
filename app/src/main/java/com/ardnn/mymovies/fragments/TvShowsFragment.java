@@ -55,10 +55,6 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private boolean isLoading = true;
 
-    public static TvShowsFragment newInstance() {
-        return new TvShowsFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

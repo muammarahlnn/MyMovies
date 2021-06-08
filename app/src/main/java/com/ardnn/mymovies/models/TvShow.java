@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.models;
 
+import com.ardnn.mymovies.utils.Const;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -39,8 +40,8 @@ public class TvShow {
     @SerializedName("vote_average")
     private double rating;
 
-    public String getWallpaperUrl() {
-        return wallpaperUrl;
+    public String getWallpaperUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + wallpaperUrl;
     }
 
     public List<Integer> getDurationList() {
@@ -75,8 +76,8 @@ public class TvShow {
         return synopsis;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public String getPosterUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + posterUrl;
     }
 
     public double getRating() {

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.AiringToday;
+import com.ardnn.mymovies.models.ImageSize;
 import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
@@ -109,7 +110,7 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
         private void onBind(int position) {
             // set data to widgets
             Glide.with(itemView.getContext())
-                    .load(Const.IMG_URL_300 + airingTodayList.get(position).getPosterUrl())
+                    .load(airingTodayList.get(position).getPosterUrl(ImageSize.W342))
                     .into(ivPoster);
 
             tvTitle.setText(airingTodayList.get(position).getTitle());

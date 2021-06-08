@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ardnn.mymovies.R;
+import com.ardnn.mymovies.models.ImageSize;
 import com.ardnn.mymovies.models.NowPlaying;
 import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.utils.Util;
@@ -108,7 +109,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
         private void onBind(int position) {
             // set data to widgets
             Glide.with(itemView.getContext())
-                    .load(Const.IMG_URL_300 + nowPlayingList.get(position).getPosterUrl())
+                    .load(nowPlayingList.get(position).getPosterUrl(ImageSize.W342))
                     .into(ivPoster);
 
             tvTitle.setText(nowPlayingList.get(position).getTitle());

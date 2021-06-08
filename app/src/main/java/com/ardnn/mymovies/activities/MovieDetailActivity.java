@@ -13,6 +13,7 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
+import com.ardnn.mymovies.models.ImageSize;
 import com.ardnn.mymovies.models.Movie;
 import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.networks.MovieApiClient;
@@ -120,7 +121,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void setMovieData() {
         String title = movie.getTitle();
         String synopsis = movie.getSynopsis();
-        String wallpaperUrl = movie.getWallpaperUrl();
+        String wallpaperUrl = movie.getWallpaperUrl(ImageSize.W780);
         String releaseDate = Util.convertToDate(movie.getReleaseDate());
         double rating = movie.getRating();
 
@@ -138,7 +139,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(releaseDate);
         tvRating.setText(String.valueOf(rating));
         Glide.with(this)
-                .load(Const.IMG_URL_500 + wallpaperUrl)
+                .load(wallpaperUrl)
                 .into(ivPoster);
 
         // change title action bar

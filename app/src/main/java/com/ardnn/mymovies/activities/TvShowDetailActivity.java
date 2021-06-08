@@ -13,6 +13,7 @@ import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
+import com.ardnn.mymovies.models.ImageSize;
 import com.ardnn.mymovies.models.TvShow;
 import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.networks.TvShowApiClient;
@@ -121,7 +122,7 @@ public class TvShowDetailActivity extends AppCompatActivity {
     private void setTvShowData() {
         String title = tvShow.getTitle();
         String synopsis = tvShow.getSynopsis();
-        String wallpaperUrl = tvShow.getWallpaperUrl();
+        String wallpaperUrl = tvShow.getWallpaperUrl(ImageSize.W780);
         String releaseDate = Util.convertToDate(tvShow.getFirstAirDate());
         double rating = tvShow.getRating();
 
@@ -139,7 +140,7 @@ public class TvShowDetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(releaseDate);
         tvRating.setText(String.valueOf(rating));
         Glide.with(this)
-                .load(Const.IMG_URL_500 + wallpaperUrl)
+                .load(wallpaperUrl)
                 .into(ivPoster);
 
         // change title action bar

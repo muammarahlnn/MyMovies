@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.models;
 
+import com.ardnn.mymovies.utils.Const;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class NowPlaying {
         return releaseDate;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public String getPosterUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + posterUrl;
     }
 
     public double getRating() {

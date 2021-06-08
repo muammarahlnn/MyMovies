@@ -1,6 +1,7 @@
 package com.ardnn.mymovies.models;
 
 
+import com.ardnn.mymovies.utils.Const;
 import com.google.gson.annotations.SerializedName;
 
 public class Movie  {
@@ -52,11 +53,11 @@ public class Movie  {
         return rating;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public String getPosterUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + posterUrl;
     }
 
-    public String getWallpaperUrl() {
-        return wallpaperUrl;
+    public String getWallpaperUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + wallpaperUrl;
     }
 }

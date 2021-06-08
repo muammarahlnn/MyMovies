@@ -14,7 +14,7 @@ import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.TvShow;
-import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.networks.TvShowApiClient;
 import com.ardnn.mymovies.networks.TvShowApiInterface;
 import com.ardnn.mymovies.utils.Util;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.models.AiringToday;
-import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.utils.Util;
 import com.bumptech.glide.Glide;
 

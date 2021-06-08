@@ -26,7 +26,7 @@ import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.GenreResponse;
 import com.ardnn.mymovies.models.AiringToday;
 import com.ardnn.mymovies.models.AiringTodayResponse;
-import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.networks.GenreApiClient;
 import com.ardnn.mymovies.networks.GenreApiInterface;
 import com.ardnn.mymovies.networks.TvShowApiClient;

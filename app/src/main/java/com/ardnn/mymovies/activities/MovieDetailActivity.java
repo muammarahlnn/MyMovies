@@ -14,7 +14,7 @@ import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.Movie;
-import com.ardnn.mymovies.networks.Const;
+import com.ardnn.mymovies.utils.Const;
 import com.ardnn.mymovies.networks.MovieApiClient;
 import com.ardnn.mymovies.networks.MovieApiInterface;
 import com.ardnn.mymovies.utils.Util;
@@ -53,6 +53,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         // initialization
+        initialization();
+
+        // load movie data
+        loadMovieData();
+        loadMovieCast();
+    }
+
+    private void initialization() {
         movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
         movieId = getIntent().getIntExtra(EXTRA_ID, 0);
@@ -65,10 +73,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvSynopsis = findViewById(R.id.tv_synopsis_movie_detail);
         tvRating = findViewById(R.id.tv_rating_movie_detail);
         tvReleaseDate = findViewById(R.id.tv_release_date_movie_detail);
-
-        // load movie data
-        loadMovieData();
-        loadMovieCast();
     }
 
     private void loadMovieData() {

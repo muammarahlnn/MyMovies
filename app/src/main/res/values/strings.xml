@@ -13,4 +13,6 @@
     <string name="bullet">•</string>
     <string name="per_10">/10</string>
     <string name="cast">Cast</string>
+    <string name="episodes">episodes</string>
+    <string name="seasons">seasons</string>
 </resources>

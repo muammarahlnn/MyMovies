@@ -176,6 +176,11 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
                         for (Genre genre : genreTvList) {
                             Genre.genreTvMap.put(genre.getId(), genre.getName());
                         }
+
+                        // debug
+                        for (Genre genre : genreTvList) {
+                            Log.d("GENRE", genre.getId() + " -> " + genre.getName());
+                        }
                     } else {
                         Toast.makeText(getActivity(), "Response failed.", Toast.LENGTH_SHORT).show();
                     }

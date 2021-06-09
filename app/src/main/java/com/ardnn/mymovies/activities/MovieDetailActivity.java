@@ -203,7 +203,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         String title = movie.getTitle();
         String releaseDate = Util.convertToDate(movie.getReleaseDate());
         String duration = movie.getDuration() + " mins";
-        double rating = movie.getRating();
+        String rating = movie.getRating() + "";
         String synopsis = movie.getSynopsis();
 
         // get genres
@@ -223,7 +223,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         tvSynopsis.setText(synopsis);
         tvReleaseDate.setText(releaseDate);
         tvDuration.setText(duration);
-        tvRating.setText(String.valueOf(rating));
+        tvRating.setText(rating);
         Glide.with(this).load(posterUrl).into(ivPoster);
         Glide.with(this).load(wallpaperUrl).into(ivWallpaper);
 

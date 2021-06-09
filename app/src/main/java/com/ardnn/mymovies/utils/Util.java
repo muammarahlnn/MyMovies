@@ -30,8 +30,15 @@ public class Util {
                 "May", "June", "July", "August",
                 "September", "October", "November", "December"
         };
-        String[] splittedDate = date.split("-"); // [year, month, date]
-        return splittedDate[2] + " " + months[Integer.parseInt(splittedDate[1])] + ", " + splittedDate[0];
+        String[] splittedDate = date.split("-"); // [year, month, day]
+        String year = splittedDate[0];
+        String month = months[Integer.parseInt(splittedDate[1])];
+        String day = splittedDate[2];
+
+        if (day.charAt(0) == '0') {
+            day = day.substring(1);
+        }
+        return day + " " + month + " " + year;
     }
 
     public static void initializeActionBar(Activity activity) {

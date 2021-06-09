@@ -87,7 +87,7 @@ public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnIt
                     pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
                     totalItemCount = gridLayoutManager.getItemCount();
 
-                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount / 2) {
                         isLoading = false;
 
                         Log.d("TV SHOWS", "End recyclverview reached.");

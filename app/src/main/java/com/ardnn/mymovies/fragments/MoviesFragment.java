@@ -87,7 +87,7 @@ public class MoviesFragment extends Fragment implements NowPlayingAdapter.OnItem
                     pastVisibleItems = gridLayoutManager.findFirstVisibleItemPosition();
                     totalItemCount = gridLayoutManager.getItemCount();
 
-                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                    if (isLoading && !Util.isSearching && (visibleItemCount + pastVisibleItems) >= totalItemCount / 2) {
                         isLoading = false;
 
                         Log.d("MOVIES", "End recyclverview reached.");

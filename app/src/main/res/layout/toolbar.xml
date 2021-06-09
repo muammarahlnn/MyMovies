@@ -24,7 +24,7 @@
         tools:text="Movies"
         android:textSize="21sp"
         android:textColor="@color/yellow_primary"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/roboto_medium"
         />
 
 

@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.models;
 
+import com.ardnn.mymovies.utils.Const;
 import com.google.gson.annotations.SerializedName;
 
 public class Cast {
@@ -13,7 +14,7 @@ public class Cast {
     private String character;
 
     @SerializedName("profile_path")
-    private String profilePath;
+    private String imageUrl;
 
     public int getId() {
         return id;
@@ -27,7 +28,7 @@ public class Cast {
         return character;
     }
 
-    public String getProfilePath() {
-        return profilePath;
+    public String getImageUrl(ImageSize size) {
+        return Const.IMG_URL + size.getValue() + imageUrl;
     }
 }

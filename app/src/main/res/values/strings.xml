@@ -9,4 +9,8 @@
     <string name="empty_favorite_movies">You haven\'t favorited any Movies yet</string>
     <string name="empty_favorite_tv_shows">You haven\'t favorited any TV Shows yet</string>
     <string name="label_favorite">Favorite</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="bullet">•</string>
+    <string name="per_10">/10</string>
+    <string name="cast">Cast</string>
 </resources>

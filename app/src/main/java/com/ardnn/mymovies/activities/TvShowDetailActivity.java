@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.adapters.CastAdapter;
 import com.ardnn.mymovies.adapters.GenreAdapter;
+import com.ardnn.mymovies.database.FavoritedDatabase;
+import com.ardnn.mymovies.database.entities.FavoritedTvShow;
 import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
@@ -42,6 +44,9 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
     // extras
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_GENRES = "extra_genres";
+
+    // database
+    private FavoritedDatabase database;
 
     // tv show
     private TvShow tvShow;
@@ -68,7 +73,7 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
 
     // attributes
     private boolean isSynopsisCollapsed = true;
-    private boolean isFavorite = false;
+    private boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,34 +92,9 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
         clWrapperSynopsis.setOnClickListener(this);
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_favorite_tv_show_detail:
-                if (!isFavorite) {
-                    ivFavorite.setImageResource(R.drawable.ic_favorite_true);
-                    Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
-                } else {
-                    ivFavorite.setImageResource(R.drawable.ic_favorite_false);
-                    Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
-                }
-                isFavorite = !isFavorite;
-
-                break;
-            case R.id.cl_wrapper_synopsis_tv_show_detail:
-                if (isSynopsisCollapsed) {
-                    tvSynopsis.setMaxLines(Integer.MAX_VALUE);
-                } else {
-                    tvSynopsis.setMaxLines(2);
-                }
-                isSynopsisCollapsed = !isSynopsisCollapsed;
-
-                break;
-        }
-    }
-
     private void initialization() {
+        database = FavoritedDatabase.getDatabase(getApplicationContext());
+
         tvShowApiInterface = TvShowApiClient.getRetrofit()
                 .create(TvShowApiInterface.class);
         tvId = getIntent().getIntExtra(EXTRA_ID, 0);
@@ -136,6 +116,12 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
                 false)
         );
 
+        // set iv favorite
+        isFavorite = database.favoritedDao().isTvShowExist(tvId);
+        ivFavorite = findViewById(R.id.iv_favorite_tv_show_detail);
+        ivFavorite.setImageResource(isFavorite ?
+                R.drawable.ic_favorite_true : R.drawable.ic_favorite_false);
+
         pbDetail  = findViewById(R.id.pb_tv_show_detail);
         ivPoster = findViewById(R.id.iv_poster_tv_show_detail);
         ivWallpaper = findViewById(R.id.iv_wallpaper_tv_show_detail);
@@ -150,6 +136,60 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
         tvSynopsis = findViewById(R.id.tv_synopsis_tv_show_detail);
         tvMore = findViewById(R.id.tv_more_tv_show_detail);
         clWrapperSynopsis = findViewById(R.id.cl_wrapper_synopsis_tv_show_detail);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_favorite_tv_show_detail:
+                btnFavoriteClicked();
+                break;
+            case R.id.cl_wrapper_synopsis_tv_show_detail:
+                if (isSynopsisCollapsed) {
+                    tvSynopsis.setMaxLines(Integer.MAX_VALUE);
+                    tvMore.setText("less");
+                } else {
+                    tvSynopsis.setMaxLines(2);
+                    tvMore.setText("more");
+                }
+                isSynopsisCollapsed = !isSynopsisCollapsed;
+                break;
+        }
+    }
+
+    private void btnFavoriteClicked() {
+        if (!isFavorite) {
+            // insert to database
+            String title = tvShow.getTitle();
+            String posterUrl = tvShow.getPosterUrl(ImageSize.W342);
+            String releaseDate = tvShow.getFirstAirDate();
+            double rating = tvShow.getRating();
+
+            FavoritedTvShow favoritedTvShow = new FavoritedTvShow(
+                    tvId,
+                    title,
+                    releaseDate,
+                    posterUrl,
+                    rating
+            );
+            database.favoritedDao().insertTvShow(favoritedTvShow).subscribe(() -> {
+                ivFavorite.setImageResource(R.drawable.ic_favorite_true);
+                Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
+            }, throwable -> {
+                Toast.makeText(this, "Insert failed.", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // delete tv show from database
+            FavoritedTvShow favoritedTvShow = database.favoritedDao().getTvShow(tvId);
+            database.favoritedDao().deleteTvShow(favoritedTvShow).subscribe(() -> {
+                ivFavorite.setImageResource(R.drawable.ic_favorite_false);
+                Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
+            }, throwable -> {
+                Toast.makeText(this, "Delete failed.", Toast.LENGTH_SHORT).show();
+            });
+        }
+        isFavorite = !isFavorite;
     }
 
     private void loadTvShowData() {

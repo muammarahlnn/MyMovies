@@ -1,6 +1,5 @@
 package com.ardnn.mymovies.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,17 +10,16 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.adapters.CastAdapter;
 import com.ardnn.mymovies.adapters.GenreAdapter;
+import com.ardnn.mymovies.database.FavoritedDatabase;
+import com.ardnn.mymovies.database.entities.FavoritedMovie;
 import com.ardnn.mymovies.models.Cast;
 import com.ardnn.mymovies.models.CastResponse;
 import com.ardnn.mymovies.models.Genre;
@@ -47,6 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_GENRES = "extra_genres";
 
+    // database
+    private FavoritedDatabase database;
+
     // movies
     private Movie movie;
     private MovieApiInterface movieApiInterface;
@@ -71,7 +72,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
 
     // attributes
     private boolean isSynopsisCollapsed = true;
-    private boolean isFavorite = false;
+    private boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,34 +91,9 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         clWrapperSynopsis.setOnClickListener(this);
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_favorite_detail:
-                if (!isFavorite) {
-                    ivFavorite.setImageResource(R.drawable.ic_favorite_true);
-                    Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
-                } else {
-                    ivFavorite.setImageResource(R.drawable.ic_favorite_false);
-                    Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
-                }
-                isFavorite = !isFavorite;
-                break;
-            case R.id.cl_wrapper_synopsis_movie_detail:
-                if (isSynopsisCollapsed) {
-                    tvSynopsis.setMaxLines(Integer.MAX_VALUE);
-                    tvMore.setText("less");
-                } else {
-                    tvSynopsis.setMaxLines(2);
-                    tvMore.setText("more");
-                }
-                isSynopsisCollapsed = !isSynopsisCollapsed;
-                break;
-        }
-    }
-
     private void initialization() {
+        database = FavoritedDatabase.getDatabase(getApplicationContext());
+
         movieApiInterface = MovieApiClient.getRetrofit()
                 .create(MovieApiInterface.class);
         movieId = getIntent().getIntExtra(EXTRA_ID, 0);
@@ -139,10 +115,15 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
                 false)
         );
 
+        // set iv favorite
+        isFavorite = database.favoritedDao().isMovieExist(movieId);
+        ivFavorite = findViewById(R.id.iv_favorite_detail);
+        ivFavorite.setImageResource(isFavorite ?
+                R.drawable.ic_favorite_true : R.drawable.ic_favorite_false);
+
         pbDetail = findViewById(R.id.pb_movie_detail);
         ivPoster = findViewById(R.id.iv_poster_movie_detail);
         ivWallpaper = findViewById(R.id.iv_wallpaper_movie_detail);
-        ivFavorite = findViewById(R.id.iv_favorite_detail);
         tvTitle = findViewById(R.id.tv_title_movie_detail);
         tvReleaseDate = findViewById(R.id.tv_release_date_movie_detail);
         tvDuration = findViewById(R.id.tv_duration_movie_detail);
@@ -150,6 +131,60 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         tvRating = findViewById(R.id.tv_rating_movie_detail);
         tvMore = findViewById(R.id.tv_more_movie_detail);
         clWrapperSynopsis = findViewById(R.id.cl_wrapper_synopsis_movie_detail);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_favorite_detail:
+                btnFavoriteClicked();
+                break;
+            case R.id.cl_wrapper_synopsis_movie_detail:
+                if (isSynopsisCollapsed) {
+                    tvSynopsis.setMaxLines(Integer.MAX_VALUE);
+                    tvMore.setText("less");
+                } else {
+                    tvSynopsis.setMaxLines(2);
+                    tvMore.setText("more");
+                }
+                isSynopsisCollapsed = !isSynopsisCollapsed;
+                break;
+        }
+    }
+
+    private void btnFavoriteClicked() {
+        if (!isFavorite) {
+            // insert to database
+            String title = movie.getTitle();
+            String posterUrl = movie.getPosterUrl(ImageSize.W342);
+            String releaseDate = movie.getReleaseDate();
+            double rating = movie.getRating();
+
+            FavoritedMovie favoritedMovie = new FavoritedMovie(
+                    movieId,
+                    title,
+                    releaseDate,
+                    posterUrl,
+                    rating
+            );
+            database.favoritedDao().insertMovie(favoritedMovie).subscribe(() -> {
+                ivFavorite.setImageResource(R.drawable.ic_favorite_true);
+                Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
+            }, throwable -> {
+                Toast.makeText(this, "Insert failed.", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // delete movie from database
+            FavoritedMovie favoritedMovie = database.favoritedDao().getMovie(movieId);
+            database.favoritedDao().deleteMovie(favoritedMovie).subscribe(() -> {
+                ivFavorite.setImageResource(R.drawable.ic_favorite_false);
+                Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
+            }, throwable -> {
+                Toast.makeText(this, "Delete failed.", Toast.LENGTH_SHORT).show();
+            });
+        }
+        isFavorite = !isFavorite;
     }
 
     private void loadMovieData() {

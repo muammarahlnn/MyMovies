@@ -3,15 +3,14 @@ package com.ardnn.mymovies.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.MovieDetailActivity;
@@ -21,8 +20,6 @@ import com.ardnn.mymovies.database.FavoritedDatabase;
 import com.ardnn.mymovies.database.entities.FavoritedMovie;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class FavoriteMoviesFragment extends Fragment implements OnItemClick {
@@ -34,7 +31,7 @@ public class FavoriteMoviesFragment extends Fragment implements OnItemClick {
     private List<FavoritedMovie> favoritedMovieList;
 
     // widgets
-    private ConstraintLayout clEmpty;
+    private TextView clEmpty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

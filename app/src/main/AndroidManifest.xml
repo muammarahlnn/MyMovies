@@ -12,9 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieApp">
-        <activity android:name=".activities.TvShowDetailActivity"></activity>
-        <activity android:name=".activities.MovieDetailActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.TvShowDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.MovieDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

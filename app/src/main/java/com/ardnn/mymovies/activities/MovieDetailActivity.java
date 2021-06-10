@@ -52,6 +52,9 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private Movie movie;
     private MovieApiInterface movieApiInterface;
     private int movieId;
+    private double rating;
+    private String title, releaseDate, duration, synopsis,
+                posterUrl, wallpaperUrl;
 
     // cast
     private RecyclerView rvCast;
@@ -62,6 +65,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView rvGenre;
     private GenreAdapter genreAdapter;
     private List<String> genreList;
+    private List<Integer> genreIdList;
 
     // widgets
     private Toolbar toolbarDetail;
@@ -156,21 +160,19 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     private void btnFavoriteClicked() {
         if (!isFavorite) {
             // insert to database
-            String title = movie.getTitle();
-            String posterUrl = movie.getPosterUrl(ImageSize.W342);
-            String releaseDate = movie.getReleaseDate();
-            double rating = movie.getRating();
-
+            String genres = genreListToStr(genreIdList);
+            String year = movie.getReleaseDate().substring(0, 4);
             FavoritedMovie favoritedMovie = new FavoritedMovie(
                     movieId,
                     title,
-                    releaseDate,
+                    year,
                     posterUrl,
+                    genres,
                     rating
             );
             database.favoritedDao().insertMovie(favoritedMovie).subscribe(() -> {
                 ivFavorite.setImageResource(R.drawable.ic_favorite_true);
-                Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, title + "added to favorite", Toast.LENGTH_SHORT).show();
             }, throwable -> {
                 Toast.makeText(this, "Insert failed.", Toast.LENGTH_SHORT).show();
             });
@@ -179,12 +181,20 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
             FavoritedMovie favoritedMovie = database.favoritedDao().getMovie(movieId);
             database.favoritedDao().deleteMovie(favoritedMovie).subscribe(() -> {
                 ivFavorite.setImageResource(R.drawable.ic_favorite_false);
-                Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, title + "removed from favorite", Toast.LENGTH_SHORT).show();
             }, throwable -> {
                 Toast.makeText(this, "Delete failed.", Toast.LENGTH_SHORT).show();
             });
         }
         isFavorite = !isFavorite;
+    }
+
+    private String genreListToStr(List<Integer> genreIds) {
+        String ans = "";
+        for (Integer id : genreIds) {
+            ans += id + ";";
+        }
+        return ans;
     }
 
     private void loadMovieData() {
@@ -233,17 +243,17 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setMovieData() {
-        String posterUrl = movie.getPosterUrl(ImageSize.W342);
-        String wallpaperUrl = movie.getWallpaperUrl(ImageSize.W780);
-        String title = movie.getTitle();
-        String releaseDate = Util.convertToDate(movie.getReleaseDate());
-        String duration = movie.getDuration() + " mins";
-        String rating = movie.getRating() + "";
-        String synopsis = movie.getSynopsis();
+        title = movie.getTitle();
+        releaseDate = Util.convertToDate(movie.getReleaseDate());
+        duration = movie.getDuration() + " mins";
+        synopsis = movie.getSynopsis();
+        posterUrl = movie.getPosterUrl(ImageSize.W342);
+        wallpaperUrl = movie.getWallpaperUrl(ImageSize.W780);
+        rating = movie.getRating();
 
         // get genres
         Map<Integer, String> genreMap = Genre.genreMovieMap;
-        List<Integer> genreIdList = getIntent().getIntegerArrayListExtra(EXTRA_GENRES);
+        genreIdList = getIntent().getIntegerArrayListExtra(EXTRA_GENRES);
         genreList = new ArrayList<>();
         for (Integer id : genreIdList) {
             genreList.add(genreMap.get(id));
@@ -258,7 +268,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         tvSynopsis.setText(synopsis);
         tvReleaseDate.setText(releaseDate);
         tvDuration.setText(duration);
-        tvRating.setText(rating);
+        tvRating.setText(String.valueOf(rating));
         Glide.with(this).load(posterUrl).into(ivPoster);
         Glide.with(this).load(wallpaperUrl).into(ivWallpaper);
 

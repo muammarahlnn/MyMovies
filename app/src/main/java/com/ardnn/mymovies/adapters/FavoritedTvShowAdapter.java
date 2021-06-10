@@ -68,8 +68,4 @@ public class FavoritedTvShowAdapter extends RecyclerView.Adapter<FavoritedTvShow
             tvRating.setText(String.valueOf(favoritedTvShow.getRating()));
         }
     }
-
-    public interface OnItemClick {
-        void itemClicked(int position);
-    }
 }

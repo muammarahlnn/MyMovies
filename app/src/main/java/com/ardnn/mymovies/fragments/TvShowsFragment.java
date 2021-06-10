@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.ardnn.mymovies.R;
 import com.ardnn.mymovies.activities.TvShowDetailActivity;
 import com.ardnn.mymovies.adapters.AiringTodayAdapter;
+import com.ardnn.mymovies.adapters.OnItemClick;
 import com.ardnn.mymovies.models.Genre;
 import com.ardnn.mymovies.models.GenreResponse;
 import com.ardnn.mymovies.models.AiringToday;
@@ -41,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TvShowsFragment extends Fragment implements AiringTodayAdapter.OnItemClick {
+public class TvShowsFragment extends Fragment implements OnItemClick {
 
     // widgets
     private ProgressBar pbTvShows;

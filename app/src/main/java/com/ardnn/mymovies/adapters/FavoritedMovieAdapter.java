@@ -17,8 +17,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class FavoritedMovieAdapter extends RecyclerView.Adapter<FavoritedMovieAdapter.ViewHolder> {
-    private List<FavoritedMovie> favoritedMovieList;
-    private OnItemClick onItemClick;
+    private final List<FavoritedMovie> favoritedMovieList;
+    private final OnItemClick onItemClick;
 
     public FavoritedMovieAdapter(List<FavoritedMovie> favoritedMovieList, OnItemClick onItemClick) {
         this.favoritedMovieList = favoritedMovieList;
@@ -49,7 +49,7 @@ public class FavoritedMovieAdapter extends RecyclerView.Adapter<FavoritedMovieAd
 
         public ViewHolder(@NonNull View itemView, OnItemClick onItemClick) {
             super(itemView);
-            itemView.setOnClickListener(v -> onItemClick.itemCLicked(getAbsoluteAdapterPosition()));
+            itemView.setOnClickListener(v -> onItemClick.itemClicked(getAbsoluteAdapterPosition()));
 
             // initialize widgets
             tvTitle = itemView.findViewById(R.id.tv_title_item_favorited);
@@ -69,7 +69,4 @@ public class FavoritedMovieAdapter extends RecyclerView.Adapter<FavoritedMovieAd
         }
     }
 
-    public interface OnItemClick {
-        void itemCLicked(int position);
-    }
 }

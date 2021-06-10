@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.ViewHolder> implements Filterable {
+    private final OnItemClick onItemClick;
     private final List<NowPlaying> nowPlayingList;
     private List<NowPlaying> nowPlayingListFull;
-    private final OnItemClick onItemClick;
 
     public NowPlayingAdapter(List<NowPlaying> nowPlayingList, OnItemClick onItemClick) {
         this.nowPlayingList = nowPlayingList;
@@ -47,7 +47,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.onBind(position);
+        holder.onBind(nowPlayingList.get(position));
     }
 
     @Override
@@ -106,19 +106,15 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.Vi
             ivPoster = itemView.findViewById(R.id.iv_poster_item_film);
         }
 
-        private void onBind(int position) {
+        private void onBind(NowPlaying nowPlaying) {
             // set data to widgets
             Glide.with(itemView.getContext())
-                    .load(nowPlayingList.get(position).getPosterUrl(ImageSize.W342))
+                    .load(nowPlaying.getPosterUrl(ImageSize.W342))
                     .into(ivPoster);
 
-            tvTitle.setText(nowPlayingList.get(position).getTitle());
-            tvRating.setText(String.valueOf(nowPlayingList.get(position).getRating()));
-            tvYear.setText(nowPlayingList.get(position).getReleaseDate().substring(0, 4));
+            tvTitle.setText(nowPlaying.getTitle());
+            tvRating.setText(String.valueOf(nowPlaying.getRating()));
+            tvYear.setText(nowPlaying.getReleaseDate().substring(0, 4));
         }
-    }
-
-    public interface OnItemClick {
-        void itemClicked(int position);
     }
 }

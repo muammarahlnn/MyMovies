@@ -8,6 +8,7 @@ import com.ardnn.mymovies.models.ImageSize;
 import com.ardnn.mymovies.utils.Const;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(tableName = "favorited_movies")
 public class FavoritedMovie implements Serializable {
@@ -27,11 +28,15 @@ public class FavoritedMovie implements Serializable {
     @ColumnInfo(name = "rating")
     private double rating;
 
-    public FavoritedMovie(int id, String title, String releaseDate, String posterUrl, double rating) {
+    @ColumnInfo(name = "genres")
+    private String genres;
+
+    public FavoritedMovie(int id, String title, String releaseDate, String posterUrl, String genres, double rating) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterUrl = posterUrl;
+        this.genres = genres;
         this.rating = rating;
     }
 
@@ -83,5 +88,13 @@ public class FavoritedMovie implements Serializable {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 }

@@ -48,5 +48,4 @@ public interface FavoritedDao {
     @Delete
     Completable deleteTvShow(FavoritedTvShow tvShow);
 
-
 }

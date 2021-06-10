@@ -35,6 +35,7 @@ public class FavoriteRootFragment extends Fragment {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         favoriteRootAdapter = new FavoriteRootAdapter(fragmentManager, getLifecycle());
         vp2Favorite.setAdapter(favoriteRootAdapter);
+        favoriteRootAdapter.notifyDataSetChanged();
 
         // add tablayout's tab
         tlFavorite.addTab(tlFavorite.newTab().setText("Movies"));

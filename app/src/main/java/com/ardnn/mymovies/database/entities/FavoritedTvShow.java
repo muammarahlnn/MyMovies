@@ -31,11 +31,15 @@ public class FavoritedTvShow implements Serializable {
     @ColumnInfo(name = "rating")
     private double rating;
 
-    public FavoritedTvShow(int id, String title, String releaseDate, String posterUrl, double rating) {
+    @ColumnInfo(name = "genres")
+    private String genres;
+
+    public FavoritedTvShow(int id, String title, String releaseDate, String posterUrl, String genres, double rating) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterUrl = posterUrl;
+        this.genres = genres;
         this.rating = rating;
     }
 
@@ -83,6 +87,14 @@ public class FavoritedTvShow implements Serializable {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 }
 

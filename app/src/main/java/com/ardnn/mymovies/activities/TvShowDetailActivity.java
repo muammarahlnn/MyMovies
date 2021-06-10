@@ -52,11 +52,15 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
     private TvShow tvShow;
     private TvShowApiInterface tvShowApiInterface;
     private int tvId;
+    private double rating;
+    private String title, firstAir, lastAir, duration, synopsis,
+                episodes, seasons, posterUrl, wallpaperUrl;
 
     // genre
     private RecyclerView rvGenre;
     private GenreAdapter genreAdapter;
     private List<String> genreList;
+    private List<Integer> genreIdList;
 
     // cast
     private RecyclerView rvCast;
@@ -161,21 +165,20 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
     private void btnFavoriteClicked() {
         if (!isFavorite) {
             // insert to database
-            String title = tvShow.getTitle();
-            String posterUrl = tvShow.getPosterUrl(ImageSize.W342);
-            String releaseDate = tvShow.getFirstAirDate();
-            double rating = tvShow.getRating();
-
+            String genres = genreListToStr(genreIdList);
+            String year = tvShow.getFirstAirDate().substring(0, 4);
             FavoritedTvShow favoritedTvShow = new FavoritedTvShow(
                     tvId,
                     title,
-                    releaseDate,
+                    year,
                     posterUrl,
+                    genres,
                     rating
             );
+
             database.favoritedDao().insertTvShow(favoritedTvShow).subscribe(() -> {
                 ivFavorite.setImageResource(R.drawable.ic_favorite_true);
-                Toast.makeText(this, "Favorited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, title + " added to favorite.", Toast.LENGTH_SHORT).show();
             }, throwable -> {
                 Toast.makeText(this, "Insert failed.", Toast.LENGTH_SHORT).show();
             });
@@ -184,12 +187,20 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
             FavoritedTvShow favoritedTvShow = database.favoritedDao().getTvShow(tvId);
             database.favoritedDao().deleteTvShow(favoritedTvShow).subscribe(() -> {
                 ivFavorite.setImageResource(R.drawable.ic_favorite_false);
-                Toast.makeText(this, "Unfavorited", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, title + " removed from favorite.", Toast.LENGTH_SHORT).show();
             }, throwable -> {
                 Toast.makeText(this, "Delete failed.", Toast.LENGTH_SHORT).show();
             });
         }
         isFavorite = !isFavorite;
+    }
+
+    private String genreListToStr(List<Integer> genreIds) {
+        String ans = "";
+        for (Integer id : genreIds) {
+            ans += id + ";";
+        }
+        return ans;
     }
 
     private void loadTvShowData() {
@@ -238,21 +249,21 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setTvShowData() {
-        String posterUrl = tvShow.getPosterUrl(ImageSize.W342);
-        String wallpaperUrl = tvShow.getWallpaperUrl(ImageSize.W780);
-        String title = tvShow.getTitle();
-        String duration = tvShow.getDurationList().get(0) + " mins";
-        String firstAiring = Util.convertToDate(tvShow.getFirstAirDate());
-        String lastAiring = tvShow.getLastAirDate() != null ?
+        posterUrl = tvShow.getPosterUrl(ImageSize.W342);
+        wallpaperUrl = tvShow.getWallpaperUrl(ImageSize.W780);
+        title = tvShow.getTitle();
+        duration = tvShow.getDurationList().get(0) + " mins";
+        firstAir = Util.convertToDate(tvShow.getFirstAirDate());
+        lastAir = tvShow.getLastAirDate() != null ?
                 Util.convertToDate(tvShow.getLastAirDate()) : "Not yet known";
-        String synopsis = tvShow.getSynopsis();
-        String rating = tvShow.getRating() + "";
-        String episodes = tvShow.getNumberOfEpisodes() + "";
-        String seasons = tvShow.getNumberOfSeasons() + "";
+        synopsis = tvShow.getSynopsis();
+        rating = tvShow.getRating();
+        episodes = tvShow.getNumberOfEpisodes() + "";
+        seasons = tvShow.getNumberOfSeasons() + "";
 
         // get genres
         Map<Integer, String> genreMap = Genre.genreTvMap;
-        List<Integer> genreIdList = getIntent().getIntegerArrayListExtra(EXTRA_GENRES);
+        genreIdList = getIntent().getIntegerArrayListExtra(EXTRA_GENRES);
         genreList = new ArrayList<>();
         for (Integer id : genreIdList) {
             genreList.add(genreMap.get(id));
@@ -272,9 +283,9 @@ public class TvShowDetailActivity extends AppCompatActivity implements View.OnCl
         tvEpisodes.setText(episodes);
         tvSeasons.setText(seasons);
         tvDuration.setText(duration);
-        tvRating.setText(rating);
-        tvFirstAir.setText(firstAiring);
-        tvLastAir.setText(lastAiring);
+        tvRating.setText(String.valueOf(rating));
+        tvFirstAir.setText(firstAir);
+        tvLastAir.setText(lastAir);
         tvSynopsis.setText(synopsis);
         Glide.with(this).load(posterUrl).into(ivPoster);
         Glide.with(this).load(wallpaperUrl).into(ivWallpaper);

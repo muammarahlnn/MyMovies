@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,13 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ardnn.mymovies.R;
+import com.ardnn.mymovies.activities.MovieDetailActivity;
 import com.ardnn.mymovies.adapters.FavoritedMovieAdapter;
+import com.ardnn.mymovies.adapters.OnItemClick;
 import com.ardnn.mymovies.database.FavoritedDatabase;
 import com.ardnn.mymovies.database.entities.FavoritedMovie;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class FavoriteMoviesFragment extends Fragment implements FavoritedMovieAdapter.OnItemClick {
+public class FavoriteMoviesFragment extends Fragment implements OnItemClick {
 
     // recyclerview favorited movies attr
     private FavoritedDatabase database;
@@ -49,20 +55,37 @@ public class FavoriteMoviesFragment extends Fragment implements FavoritedMovieAd
 
     private void loadFavoritedMoviesData() {
         database.favoritedDao().getAllMovies().observe(getActivity(), favoritedMovies -> {
-            if (favoritedMovies.size() != 0) {
-                // set up recyclerview favorited movies
-                favoritedMovieList = favoritedMovies;
-                favoritedMovieAdapter = new FavoritedMovieAdapter(favoritedMovieList, FavoriteMoviesFragment.this);
-                rvMovies.setAdapter(favoritedMovieAdapter);
+            // setup recyclerview favorited tv show
+            favoritedMovieList = favoritedMovies;
+            favoritedMovieAdapter = new FavoritedMovieAdapter(favoritedMovieList, FavoriteMoviesFragment.this);
+            rvMovies.setAdapter(favoritedMovieAdapter);
 
-                // remove alert
-                clEmpty.setVisibility(View.GONE);
-            }
+            // check if there are favorited movies then remove alert and vice versa
+            clEmpty.setVisibility(favoritedMovies.size() != 0 ? View.GONE : View.VISIBLE);
         });
     }
 
     @Override
-    public void itemCLicked(int position) {
+    public void itemClicked(int position) {
+        // go to movie detail
+        Intent goToMovieDetail = new Intent(getActivity(), MovieDetailActivity.class);
+        goToMovieDetail.putExtra(
+                MovieDetailActivity.EXTRA_ID,
+                favoritedMovieList.get(position).getId()
+        );
+        goToMovieDetail.putIntegerArrayListExtra(
+                MovieDetailActivity.EXTRA_GENRES,
+                (ArrayList<Integer>) genreToGenreList(favoritedMovieList.get(position).getGenres())
+        );
+        startActivity(goToMovieDetail);
+    }
 
+    private List<Integer> genreToGenreList(String genres) {
+        List<Integer> ans = new ArrayList<>();
+        String[] temp = genres.split(";");
+        for (String genre : temp) {
+            ans.add(Integer.valueOf(genre));
+        }
+        return ans;
     }
 }

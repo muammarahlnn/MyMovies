@@ -23,9 +23,9 @@ import java.util.List;
 
 
 public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.ViewHolder> implements Filterable {
+    private final OnItemClick onItemClick;
     private final List<AiringToday> airingTodayList;
     private List<AiringToday> airingTodayListFull;
-    private final OnItemClick onItemClick;
 
     public AiringTodayAdapter(List<AiringToday> airingTodayList, OnItemClick onItemClick) {
         this.airingTodayList = airingTodayList;
@@ -48,7 +48,7 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull AiringTodayAdapter.ViewHolder holder, int position) {
-        holder.onBind(position);
+        holder.onBind(airingTodayList.get(position));
     }
 
     @Override
@@ -107,20 +107,16 @@ public class AiringTodayAdapter extends RecyclerView.Adapter<AiringTodayAdapter.
             ivPoster = itemView.findViewById(R.id.iv_poster_item_film);
         }
 
-        private void onBind(int position) {
+        private void onBind(AiringToday airingToday) {
             // set data to widgets
             Glide.with(itemView.getContext())
-                    .load(airingTodayList.get(position).getPosterUrl(ImageSize.W342))
+                    .load(airingToday.getPosterUrl(ImageSize.W342))
                     .into(ivPoster);
 
-            tvTitle.setText(airingTodayList.get(position).getTitle());
-            tvRating.setText(String.valueOf(airingTodayList.get(position).getRating()));
-            tvYear.setText(airingTodayList.get(position).getReleaseDate().substring(0, 4));
+            tvTitle.setText(airingToday.getTitle());
+            tvRating.setText(String.valueOf(airingToday.getRating()));
+            tvYear.setText(airingToday.getReleaseDate().substring(0, 4));
         }
 
-    }
-
-    public interface OnItemClick {
-        void itemClicked(int position);
     }
 }

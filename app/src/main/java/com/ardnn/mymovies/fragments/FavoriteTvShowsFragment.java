@@ -1,5 +1,6 @@
 package com.ardnn.mymovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,13 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ardnn.mymovies.R;
+import com.ardnn.mymovies.activities.MovieDetailActivity;
+import com.ardnn.mymovies.activities.TvShowDetailActivity;
 import com.ardnn.mymovies.adapters.FavoritedTvShowAdapter;
+import com.ardnn.mymovies.adapters.OnItemClick;
 import com.ardnn.mymovies.database.FavoritedDatabase;
 import com.ardnn.mymovies.database.entities.FavoritedTvShow;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteTvShowsFragment extends Fragment implements FavoritedTvShowAdapter.OnItemClick {
+public class FavoriteTvShowsFragment extends Fragment implements OnItemClick {
 
     // recyclerview favorited tv shows attr
     private FavoritedDatabase database;
@@ -50,20 +55,37 @@ public class FavoriteTvShowsFragment extends Fragment implements FavoritedTvShow
 
     private void loadFavoritedTvShowsData() {
         database.favoritedDao().getAllTvShows().observe(getActivity(), favoritedTvShows -> {
-            if (favoritedTvShows.size() != 0) {
-                // setup recyclerview favorited tv shows
-                favoritedTvShowList = favoritedTvShows;
-                favoritedTvShowAdapter = new FavoritedTvShowAdapter(favoritedTvShowList, FavoriteTvShowsFragment.this);
-                rvTvShows.setAdapter(favoritedTvShowAdapter);
+            // setup recyclerview favorited tv shows
+            favoritedTvShowList = favoritedTvShows;
+            favoritedTvShowAdapter = new FavoritedTvShowAdapter(favoritedTvShowList, FavoriteTvShowsFragment.this);
+            rvTvShows.setAdapter(favoritedTvShowAdapter);
 
-                // remove alert
-                clEmpty.setVisibility(View.GONE);
-            }
+            // check if there are favorited tv show then remove alert and vice versa
+            clEmpty.setVisibility(favoritedTvShows.size() != 0 ? View.GONE : View.VISIBLE);
         });
     }
 
     @Override
     public void itemClicked(int position) {
+        // go to movie detail
+        Intent goToTvShowDetail = new Intent(getActivity(), TvShowDetailActivity.class);
+        goToTvShowDetail.putExtra(
+                TvShowDetailActivity.EXTRA_ID,
+                favoritedTvShowList.get(position).getId()
+        );
+        goToTvShowDetail.putIntegerArrayListExtra(
+                TvShowDetailActivity.EXTRA_GENRES,
+                (ArrayList<Integer>) genreToGenreList(favoritedTvShowList.get(position).getGenres())
+        );
+        startActivity(goToTvShowDetail);
+    }
 
+    private List<Integer> genreToGenreList(String genres) {
+        List<Integer> ans = new ArrayList<>();
+        String[] temp = genres.split(";");
+        for (String genre : temp) {
+            ans.add(Integer.valueOf(genre));
+        }
+        return ans;
     }
 }
